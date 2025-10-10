@@ -22,7 +22,7 @@ const features = [
     title: "All Form Types",
     description: "Support for PDF, JPG, PNG, DOC, and even online form links. Any format works.",
   },
-  {
+  { 
     icon: Clock,
     title: "24/7 Availability",
     description: "Access your forms anytime, anywhere. Fill forms at midnight or during your lunch break.",
