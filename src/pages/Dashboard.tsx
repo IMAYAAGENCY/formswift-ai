@@ -1,21 +1,91 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Navbar } from "@/components/Navbar";
 import { Upload, FileText, Crown, Calendar, TrendingUp } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
-  // Mock user data - will be replaced with real data later
-  const userData = {
-    name: "John Doe",
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState({
+    name: "",
     plan: "Free",
     formsUsed: 0,
     formsLimit: 2,
-    expiryDate: null,
-  };
+    expiryDate: null as string | null,
+  });
+
+  useEffect(() => {
+    // Check authentication and load user data
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
+
+      // Load user profile
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+
+      if (error) {
+        toast({
+          title: "Error loading profile",
+          description: "Unable to load your profile data.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      if (profile) {
+        setUserData({
+          name: profile.name,
+          plan: profile.plan_type,
+          formsUsed: profile.used_forms,
+          formsLimit: profile.form_limit,
+          expiryDate: profile.expiry_date,
+        });
+      }
+
+      setIsLoading(false);
+    };
+
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        navigate("/auth");
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate, toast]);
 
   const progressPercentage = (userData.formsUsed / userData.formsLimit) * 100;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[var(--gradient-subtle)] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--gradient-subtle)]">
