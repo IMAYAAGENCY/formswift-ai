@@ -14,153 +14,16 @@ export type Database = {
   }
   public: {
     Tables: {
-      forms: {
-        Row: {
-          ai_filled_link: string | null
-          created_at: string
-          file_link: string | null
-          form_name: string
-          id: string
-          user_id: string
-        }
-        Insert: {
-          ai_filled_link?: string | null
-          created_at?: string
-          file_link?: string | null
-          form_name: string
-          id?: string
-          user_id: string
-        }
-        Update: {
-          ai_filled_link?: string | null
-          created_at?: string
-          file_link?: string | null
-          form_name?: string
-          id?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      logs: {
-        Row: {
-          action: string
-          id: string
-          timestamp: string
-          user_id: string
-        }
-        Insert: {
-          action: string
-          id?: string
-          timestamp?: string
-          user_id: string
-        }
-        Update: {
-          action?: string
-          id?: string
-          timestamp?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      payments: {
-        Row: {
-          amount: number
-          created_at: string
-          id: string
-          payment_id: string
-          payment_status: string
-          plan: string
-          user_id: string
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          id?: string
-          payment_id: string
-          payment_status: string
-          plan: string
-          user_id: string
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          id?: string
-          payment_id?: string
-          payment_status?: string
-          plan?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      profiles: {
-        Row: {
-          created_at: string
-          expiry_date: string | null
-          form_limit: number
-          id: string
-          name: string
-          phone: string | null
-          plan_type: string
-          used_forms: number
-        }
-        Insert: {
-          created_at?: string
-          expiry_date?: string | null
-          form_limit?: number
-          id: string
-          name: string
-          phone?: string | null
-          plan_type?: string
-          used_forms?: number
-        }
-        Update: {
-          created_at?: string
-          expiry_date?: string | null
-          form_limit?: number
-          id?: string
-          name?: string
-          phone?: string | null
-          plan_type?: string
-          used_forms?: number
-        }
-        Relationships: []
-      }
-      user_roles: {
-        Row: {
-          created_at: string
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "user"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -287,8 +150,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "user"],
-    },
+    Enums: {},
   },
 } as const
