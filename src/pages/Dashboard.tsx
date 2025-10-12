@@ -1,19 +1,98 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Navbar } from "@/components/Navbar";
 import { Upload, FileText, Crown, Calendar, TrendingUp } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
-  // Mock user data - will be replaced with real data later
-  const userData = {
-    name: "John Doe",
-    plan: "Free",
-    formsUsed: 0,
-    formsLimit: 2,
-    expiryDate: null,
-  };
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState<{
+    name: string;
+    plan: string;
+    formsUsed: number;
+    formsLimit: number;
+    expiryDate: string | null;
+  } | null>(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const checkAuthAndFetchData = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
+
+      // Fetch user profile data
+      const { data: profile, error } = await (supabase as any)
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .maybeSingle();
+
+      if (error) {
+        toast({
+          title: "Error loading profile",
+          description: error.message,
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      if (!profile) {
+        toast({
+          title: "Profile not found",
+          description: "Please try signing up again",
+          variant: "destructive",
+        });
+        await supabase.auth.signOut();
+        navigate("/auth");
+        return;
+      }
+
+      setUserData({
+        name: profile.name,
+        plan: profile.plan_type,
+        formsUsed: profile.used_forms,
+        formsLimit: profile.form_limit,
+        expiryDate: profile.expiry_date,
+      });
+      setIsLoading(false);
+    };
+
+    checkAuthAndFetchData();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        navigate("/auth");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate, toast]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[var(--gradient-subtle)] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userData) {
+    return null;
+  }
 
   const progressPercentage = (userData.formsUsed / userData.formsLimit) * 100;
 
@@ -22,11 +101,22 @@ const Dashboard = () => {
       <Navbar />
       
       <div className="container mx-auto px-4 pt-24 pb-12">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Welcome back, {userData.name}! 👋</h1>
-          <p className="text-muted-foreground">
-            You have {userData.formsLimit - userData.formsUsed} free forms remaining
-          </p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">Welcome back, {userData.name}! 👋</h1>
+            <p className="text-muted-foreground">
+              You have {userData.formsLimit - userData.formsUsed} free forms remaining
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              navigate("/auth");
+            }}
+          >
+            Sign Out
+          </Button>
         </div>
 
         {/* Stats Grid */}
