@@ -1,0 +1,112 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.75.0";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: { Authorization: req.headers.get('Authorization')! },
+        },
+      }
+    );
+
+    // Get authenticated user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Check time-based rate limiting (max 5 requests per minute)
+    const oneMinuteAgo = new Date(Date.now() - 60000).toISOString();
+    const { data: recentLogs, error: logsError } = await supabase
+      .from('logs')
+      .select('timestamp')
+      .eq('user_id', user.id)
+      .eq('action', 'form_upload')
+      .gte('timestamp', oneMinuteAgo);
+
+    if (logsError) {
+      console.error('Error checking rate limit:', logsError);
+    }
+
+    if (recentLogs && recentLogs.length >= 5) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded. Please wait before uploading another form.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Check form limit from profile
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('used_forms, form_limit, plan_type')
+      .eq('id', user.id)
+      .single();
+
+    if (profileError || !profile) {
+      return new Response(
+        JSON.stringify({ error: 'Profile not found' }),
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (profile.used_forms >= profile.form_limit) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Form limit reached. Please upgrade your plan to continue.',
+          used: profile.used_forms,
+          limit: profile.form_limit
+        }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { formData } = await req.json();
+
+    // Log the action
+    await supabase.from('logs').insert({
+      user_id: user.id,
+      action: 'form_upload'
+    });
+
+    // Increment used_forms counter
+    await supabase
+      .from('profiles')
+      .update({ used_forms: profile.used_forms + 1 })
+      .eq('id', user.id);
+
+    // Process form (placeholder for actual AI processing)
+    // TODO: Add actual form processing logic here
+
+    return new Response(
+      JSON.stringify({ 
+        success: true,
+        message: 'Form uploaded successfully',
+        remaining_forms: profile.form_limit - profile.used_forms - 1
+      }),
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+
+  } catch (error) {
+    console.error('Error processing form:', error);
+    return new Response(
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  }
+});
