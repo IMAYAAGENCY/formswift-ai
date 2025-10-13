@@ -1,10 +1,40 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.75.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Error message mapping for security
+const ERROR_MESSAGES: Record<string, string> = {
+  'PGRST116': 'The requested resource was not found',
+  'PGRST301': 'You do not have permission to access this resource',
+  '23505': 'This operation would create a duplicate entry',
+  'default': 'An error occurred while processing your request. Please try again later.'
+};
+
+// Input validation schema
+const formDataSchema = z.object({
+  formData: z.object({
+    fileName: z.string().min(1).max(255),
+    fileType: z.enum(['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx']),
+    fileSize: z.number().positive().max(10485760), // 10MB max
+  }).optional(),
+});
+
+function getSafeErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    // Log full error server-side for debugging
+    console.error('Internal error:', error);
+    
+    // Return safe message to client
+    const pgCode = (error as any).code;
+    return ERROR_MESSAGES[pgCode] || ERROR_MESSAGES.default;
+  }
+  return ERROR_MESSAGES.default;
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -76,7 +106,22 @@ serve(async (req) => {
       );
     }
 
-    const { formData } = await req.json();
+    const body = await req.json();
+    
+    // Validate input
+    const validation = formDataSchema.safeParse(body);
+    if (!validation.success) {
+      console.error('Validation error:', validation.error);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid request data. Please check your input and try again.',
+          details: validation.error.errors.map(e => e.message)
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    const { formData } = validation.data;
 
     // Log the action
     await supabase.from('logs').insert({
@@ -103,9 +148,8 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Error processing form:', error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
+      JSON.stringify({ error: getSafeErrorMessage(error) }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

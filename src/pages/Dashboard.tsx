@@ -37,9 +37,10 @@ const Dashboard = () => {
         .maybeSingle();
 
       if (error) {
+        console.error('Profile load error:', error);
         toast({
-          title: "Error loading profile",
-          description: error.message,
+          title: "Unable to load profile",
+          description: "Please try refreshing the page. If the issue persists, contact support.",
           variant: "destructive",
         });
         setIsLoading(false);
