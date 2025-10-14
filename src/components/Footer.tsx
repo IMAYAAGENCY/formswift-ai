@@ -11,7 +11,7 @@ export const Footer = () => {
               <div className="bg-gradient-to-r from-primary to-accent p-2 rounded-lg">
                 <FileText className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold">FormAI Vault</span>
+              <span className="text-xl font-bold">AI AUTO FORM</span>
             </Link>
             <p className="text-sm text-muted-foreground">
               India's first AI-powered form assistant. Fill less, earn more.
@@ -83,7 +83,7 @@ export const Footer = () => {
         </div>
         
         <div className="mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          <p>© 2025 FormAI Vault. All rights reserved. Made in India with ❤️</p>
+          <p>© 2025 AI AUTO FORM. All rights reserved. Made in India with ❤️</p>
         </div>
       </div>
     </footer>

@@ -14,7 +14,7 @@ export const Navbar = () => {
             <div className="bg-gradient-to-r from-primary to-accent p-2 rounded-lg">
               <FileText className="h-6 w-6 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold">FormAI Vault</span>
+            <span className="text-xl font-bold">AI AUTO FORM</span>
           </Link>
 
           {/* Desktop Navigation */}
