@@ -32,6 +32,22 @@ serve(async (req) => {
       );
     }
 
+    // Rate limiting: Check for recent AI processing requests
+    const oneMinuteAgo = new Date(Date.now() - 60000).toISOString();
+    const { data: recentProcessing } = await supabase
+      .from('logs')
+      .select('timestamp')
+      .eq('user_id', user.id)
+      .eq('action', 'form_processed')
+      .gte('timestamp', oneMinuteAgo);
+
+    if (recentProcessing && recentProcessing.length >= 3) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded. Maximum 3 AI processing requests per minute.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { formId } = await req.json();
 
     if (!formId) {
