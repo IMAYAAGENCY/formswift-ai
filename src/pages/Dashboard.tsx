@@ -181,18 +181,13 @@ const Dashboard = () => {
 
       setUploadProgress(50);
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('uploaded-forms')
-        .getPublicUrl(fileName);
-
-      // Create form record
+      // Create form record with file path (not public URL for private bucket)
       const { data: formData, error: formError } = await supabase
         .from('forms')
         .insert({
           user_id: user.id,
           form_name: file.name,
-          file_link: publicUrl,
+          file_link: fileName,
         })
         .select()
         .single();
@@ -218,7 +213,7 @@ const Dashboard = () => {
       console.error('Upload error:', error);
       toast({
         title: "Upload failed",
-        description: error.message || "Failed to upload file. Please try again.",
+        description: "We couldn't upload your file. Please check your connection and try again.",
         variant: "destructive",
       });
     } finally {
@@ -227,12 +222,9 @@ const Dashboard = () => {
     }
   };
 
-  const handleDeleteForm = async (formId: string, fileName: string) => {
+  const handleDeleteForm = async (formId: string, filePath: string) => {
     try {
-      // Extract file path from public URL
-      const filePath = fileName.split('/uploaded-forms/')[1];
-      
-      // Delete from storage
+      // Delete from storage (filePath is already the storage path)
       const { error: storageError } = await supabase.storage
         .from('uploaded-forms')
         .remove([filePath]);
@@ -259,7 +251,7 @@ const Dashboard = () => {
       console.error('Delete error:', error);
       toast({
         title: "Delete failed",
-        description: "Failed to delete form. Please try again.",
+        description: "We couldn't delete your form. Please try again or contact support if the issue persists.",
         variant: "destructive",
       });
     }
@@ -290,9 +282,18 @@ const Dashboard = () => {
       });
     } catch (error: any) {
       console.error('Processing error:', error);
+      
+      // Provide user-friendly error messages
+      let errorDescription = "We couldn't process your form. Please try again.";
+      if (error.message?.includes('Rate limit')) {
+        errorDescription = "You've reached the processing limit. Please wait a moment before trying again.";
+      } else if (error.message?.includes('credits')) {
+        errorDescription = "AI processing is temporarily unavailable. Please try again later.";
+      }
+      
       toast({
         title: "Processing failed",
-        description: error.message || "Failed to process form. Please try again.",
+        description: errorDescription,
         variant: "destructive",
       });
     } finally {
@@ -502,7 +503,12 @@ const Dashboard = () => {
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        onClick={() => window.open(form.file_link, '_blank')}
+                        onClick={async () => {
+                          const { data } = await supabase.storage
+                            .from('uploaded-forms')
+                            .createSignedUrl(form.file_link, 3600);
+                          if (data?.signedUrl) window.open(data.signedUrl, '_blank');
+                        }}
                       >
                         <Download className="h-4 w-4" />
                       </Button>

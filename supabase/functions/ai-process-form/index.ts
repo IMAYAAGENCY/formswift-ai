@@ -161,10 +161,13 @@ serve(async (req) => {
     );
 
   } catch (error) {
+    // Log detailed error server-side for debugging
     console.error('Error in ai-process-form:', error);
+    
+    // Return sanitized error message to client
     return new Response(
       JSON.stringify({ 
-        error: error instanceof Error ? error.message : 'An error occurred while processing the form'
+        error: 'An error occurred while processing your form. Please try again later.'
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
