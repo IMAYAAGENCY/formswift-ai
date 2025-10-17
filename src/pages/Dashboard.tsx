@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { UpgradePlanModal } from "@/components/UpgradePlanModal";
 
 interface Form {
   id: string;
@@ -23,6 +24,7 @@ const Dashboard = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [processingFormId, setProcessingFormId] = useState<string | null>(null);
   const [forms, setForms] = useState<Form[]>([]);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [userData, setUserData] = useState<{
     name: string;
     plan: string;
@@ -43,55 +45,7 @@ const Dashboard = () => {
         return;
       }
 
-      // Fetch user profile data
-      const { data: profile, error } = await (supabase as any)
-        .from("profiles")
-        .select("*")
-        .eq("id", session.user.id)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Profile load error:', error);
-        toast({
-          title: "Unable to load profile",
-          description: "Please try refreshing the page. If the issue persists, contact support.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      if (!profile) {
-        toast({
-          title: "Profile not found",
-          description: "Please try signing up again",
-          variant: "destructive",
-        });
-        await supabase.auth.signOut();
-        navigate("/auth");
-        return;
-      }
-
-      setUserData({
-        name: profile.name,
-        plan: profile.plan_type,
-        formsUsed: profile.used_forms,
-        formsLimit: profile.form_limit,
-        expiryDate: profile.expiry_date,
-      });
-
-      // Fetch user's forms
-      const { data: formsData, error: formsError } = await supabase
-        .from('forms')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .order('created_at', { ascending: false });
-
-      if (!formsError && formsData) {
-        setForms(formsData);
-      }
-
-      setIsLoading(false);
+      await fetchUserData(session.user.id);
     };
 
     checkAuthAndFetchData();
@@ -105,6 +59,58 @@ const Dashboard = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate, toast]);
+
+  const fetchUserData = async (userId: string) => {
+    // Fetch user profile data
+    const { data: profile, error } = await (supabase as any)
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Profile load error:', error);
+      toast({
+        title: "Unable to load profile",
+        description: "Please try refreshing the page. If the issue persists, contact support.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    if (!profile) {
+      toast({
+        title: "Profile not found",
+        description: "Please try signing up again",
+        variant: "destructive",
+      });
+      await supabase.auth.signOut();
+      navigate("/auth");
+      return;
+    }
+
+    setUserData({
+      name: profile.name,
+      plan: profile.plan_type,
+      formsUsed: profile.used_forms,
+      formsLimit: profile.form_limit,
+      expiryDate: profile.expiry_date,
+    });
+
+    // Fetch user's forms
+    const { data: formsData, error: formsError } = await supabase
+      .from('forms')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (!formsError && formsData) {
+      setForms(formsData);
+    }
+
+    setIsLoading(false);
+  };
 
   if (isLoading) {
     return (
@@ -331,15 +337,20 @@ const Dashboard = () => {
               <CardTitle className="text-sm font-medium">Current Plan</CardTitle>
               <Crown className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{userData.plan}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {userData.plan === "Free" ? "2 forms included" : "Active subscription"}
-              </p>
-              <Button variant="hero" size="sm" className="mt-4 w-full" asChild>
-                <Link to="/#pricing">Upgrade Plan</Link>
-              </Button>
-            </CardContent>
+              <CardContent>
+                <div className="text-2xl font-bold">{userData.plan}</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {userData.plan === "Free" ? "2 forms included" : "Active subscription"}
+                </p>
+                <Button 
+                  variant="hero" 
+                  size="sm" 
+                  className="mt-4 w-full"
+                  onClick={() => setShowUpgradeModal(true)}
+                >
+                  Upgrade Plan
+                </Button>
+              </CardContent>
           </Card>
 
           <Card className="border-2">
@@ -527,6 +538,15 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      <UpgradePlanModal 
+        open={showUpgradeModal}
+        onOpenChange={setShowUpgradeModal}
+        onUpgradeSuccess={async () => {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) await fetchUserData(user.id);
+        }}
+      />
     </div>
   );
 };
