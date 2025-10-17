@@ -1,10 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+
+// Dynamically load Razorpay script
+const loadRazorpayScript = (): Promise<boolean> => {
+  return new Promise((resolve) => {
+    if ((window as any).Razorpay) {
+      resolve(true);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
 
 interface Plan {
   name: string;
@@ -120,9 +137,35 @@ interface UpgradePlanModalProps {
 
 export const UpgradePlanModal = ({ open, onOpenChange, onUpgradeSuccess }: UpgradePlanModalProps) => {
   const [processingPlan, setProcessingPlan] = useState<string | null>(null);
+  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   const { toast } = useToast();
 
+  // Load Razorpay script when modal opens
+  useEffect(() => {
+    if (open && !razorpayLoaded) {
+      loadRazorpayScript().then((loaded) => {
+        if (!loaded) {
+          toast({
+            title: "Error loading payment system",
+            description: "Please refresh and try again",
+            variant: "destructive",
+          });
+        }
+        setRazorpayLoaded(loaded);
+      });
+    }
+  }, [open, razorpayLoaded, toast]);
+
   const handleUpgrade = async (plan: Plan) => {
+    if (!razorpayLoaded) {
+      toast({
+        title: "Payment system not ready",
+        description: "Please wait a moment and try again",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setProcessingPlan(plan.name);
 
     try {
