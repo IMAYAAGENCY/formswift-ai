@@ -2,3 +2,6 @@ project_id = "eiwvgbksjmceafnozldm"
 
 [functions.process-form]
 verify_jwt = true
+
+[functions.ai-process-form]
+verify_jwt = true

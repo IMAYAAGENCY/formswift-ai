@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Navbar } from "@/components/Navbar";
-import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2 } from "lucide-react";
+import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 
 interface Form {
   id: string;
@@ -20,6 +21,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [processingFormId, setProcessingFormId] = useState<string | null>(null);
   const [forms, setForms] = useState<Form[]>([]);
   const [userData, setUserData] = useState<{
     name: string;
@@ -263,6 +265,41 @@ const Dashboard = () => {
     }
   };
 
+  const handleProcessForm = async (formId: string) => {
+    setProcessingFormId(formId);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('ai-process-form', {
+        body: { formId }
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Update local state with the analysis
+      setForms(prev => prev.map(f => 
+        f.id === formId ? { ...f, ai_filled_link: data.analysis } : f
+      ));
+
+      toast({
+        title: "Processing complete! ✨",
+        description: "Your form has been analyzed by AI",
+      });
+    } catch (error: any) {
+      console.error('Processing error:', error);
+      toast({
+        title: "Processing failed",
+        description: error.message || "Failed to process form. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setProcessingFormId(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[var(--gradient-subtle)]">
       <Navbar />
@@ -419,7 +456,15 @@ const Dashboard = () => {
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <FileText className="h-5 w-5 text-primary flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium truncate">{form.form_name}</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-medium truncate">{form.form_name}</p>
+                          {form.ai_filled_link && (
+                            <Badge variant="secondary" className="text-xs flex-shrink-0">
+                              <Sparkles className="h-3 w-3 mr-1" />
+                              Processed
+                            </Badge>
+                          )}
+                        </div>
                         <p className="text-sm text-muted-foreground">
                           {new Date(form.created_at).toLocaleDateString('en-US', {
                             month: 'short',
@@ -429,9 +474,31 @@ const Dashboard = () => {
                             minute: '2-digit'
                           })}
                         </p>
+                        {form.ai_filled_link && (
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                            {form.ai_filled_link.substring(0, 100)}...
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
+                      {!form.ai_filled_link && (
+                        <Button 
+                          variant="default" 
+                          size="sm"
+                          onClick={() => handleProcessForm(form.id)}
+                          disabled={processingFormId === form.id}
+                        >
+                          {processingFormId === form.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <>
+                              <Sparkles className="h-4 w-4 mr-1" />
+                              Process
+                            </>
+                          )}
+                        </Button>
+                      )}
                       <Button 
                         variant="ghost" 
                         size="sm"
