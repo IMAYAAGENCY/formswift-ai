@@ -69,6 +69,7 @@ export const Hero = () => {
                 alt="AI Form Processing"
                 width="1200"
                 height="675"
+                fetchPriority="high"
                 className="relative rounded-2xl shadow-2xl w-full h-auto"
               />
             </picture>
