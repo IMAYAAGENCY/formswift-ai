@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Navbar } from "@/components/Navbar";
 import { ChatWidget } from "@/components/ChatWidget";
 import { FormAssistantModal } from "@/components/FormAssistantModal";
-import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save, Bot, PlayCircle, Video } from "lucide-react";
+import { AnimatedUploadDemo } from "@/components/AnimatedUploadDemo";
+import { AnimatedUpgradeDemo } from "@/components/AnimatedUpgradeDemo";
+import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save, Bot, Video } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -521,77 +523,49 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Video Tutorials Section */}
+        {/* Animated Demo Section */}
         <Card className="mb-8 border-2 bg-gradient-to-br from-primary/5 to-accent/5">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Video className="h-5 w-5 text-primary" />
-              <CardTitle>Video Tutorials</CardTitle>
+              <CardTitle>Interactive Demos</CardTitle>
             </div>
             <CardDescription>
-              Learn how to use the platform with these quick video guides
+              Watch these animated guides to learn how to use the platform
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
-              {/* How to Upload Form */}
+              {/* How to Upload Form Demo */}
               <div className="space-y-3">
-                <div className="relative aspect-video rounded-lg border-2 border-primary/30 overflow-hidden bg-black">
-                  <iframe 
-                    className="w-full h-full" 
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=example" 
-                    title="How to Upload Forms Tutorial"
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowFullScreen
-                  ></iframe>
-                  <div className="absolute top-3 right-3 pointer-events-none">
-                    <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
-                      2 min
-                    </Badge>
-                  </div>
-                </div>
+                <AnimatedUploadDemo />
                 <div className="space-y-2">
                   <h4 className="font-semibold flex items-center gap-2">
                     <Upload className="h-4 w-4 text-primary" />
-                    What You'll Learn:
+                    Upload & Process Forms:
                   </h4>
                   <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside ml-2">
-                    <li>Choosing and uploading form files</li>
-                    <li>Supported file formats (PDF, JPG, PNG, DOC)</li>
-                    <li>Processing forms with AI</li>
-                    <li>Viewing and managing filled forms</li>
+                    <li>Choose form files (PDF, JPG, PNG, DOC)</li>
+                    <li>Upload and wait for processing</li>
+                    <li>AI automatically fills the form</li>
+                    <li>View and manage filled forms</li>
                   </ul>
                 </div>
               </div>
 
-              {/* How to Upgrade Plan */}
+              {/* How to Upgrade Plan Demo */}
               <div className="space-y-3">
-                <div className="relative aspect-video rounded-lg border-2 border-accent/30 overflow-hidden bg-black">
-                  <iframe 
-                    className="w-full h-full" 
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=example2" 
-                    title="How to Upgrade Your Plan Tutorial"
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowFullScreen
-                  ></iframe>
-                  <div className="absolute top-3 right-3 pointer-events-none">
-                    <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
-                      1.5 min
-                    </Badge>
-                  </div>
-                </div>
+                <AnimatedUpgradeDemo />
                 <div className="space-y-2">
                   <h4 className="font-semibold flex items-center gap-2">
                     <Crown className="h-4 w-4 text-accent" />
-                    What You'll Learn:
+                    Upgrade Your Plan:
                   </h4>
                   <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside ml-2">
-                    <li>Choosing the right plan for your needs</li>
-                    <li>Secure payment process with Razorpay</li>
+                    <li>Select the plan that fits your needs</li>
+                    <li>Secure payment via Razorpay</li>
                     <li>Instant plan activation</li>
-                    <li>Managing your subscription</li>
+                    <li>Unlimited forms & priority support</li>
                   </ul>
                 </div>
               </div>
@@ -599,7 +573,7 @@ const Dashboard = () => {
 
             <div className="mt-6 bg-muted/50 p-4 rounded-lg">
               <div className="flex items-start gap-3">
-                <FileText className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                <Sparkles className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <div className="text-sm">
                   <p className="font-semibold mb-1">Quick Tips:</p>
                   <ul className="text-muted-foreground space-y-1">
