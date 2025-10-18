@@ -151,6 +151,33 @@ serve(async (req) => {
       action: 'form_processed'
     });
 
+    // Trigger n8n webhook if configured
+    const { data: webhookData } = await supabase
+      .from('profiles')
+      .select('n8n_webhook_url')
+      .eq('id', user.id)
+      .single();
+
+    if (webhookData?.n8n_webhook_url) {
+      try {
+        await fetch(webhookData.n8n_webhook_url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event: 'form_ai_processed',
+            timestamp: new Date().toISOString(),
+            user_id: user.id,
+            form_id: formId,
+            form_name: form.form_name,
+            analysis: analysisResult,
+          }),
+        });
+        console.log('n8n webhook triggered for AI processing');
+      } catch (error) {
+        console.error('Failed to trigger n8n webhook:', error);
+      }
+    }
+
     return new Response(
       JSON.stringify({ 
         success: true,

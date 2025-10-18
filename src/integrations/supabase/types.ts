@@ -98,6 +98,7 @@ export type Database = {
           expiry_date: string | null
           form_limit: number
           id: string
+          n8n_webhook_url: string | null
           name: string
           phone: string | null
           plan_type: string
@@ -108,6 +109,7 @@ export type Database = {
           expiry_date?: string | null
           form_limit?: number
           id: string
+          n8n_webhook_url?: string | null
           name: string
           phone?: string | null
           plan_type?: string
@@ -118,6 +120,7 @@ export type Database = {
           expiry_date?: string | null
           form_limit?: number
           id?: string
+          n8n_webhook_url?: string | null
           name?: string
           phone?: string | null
           plan_type?: string

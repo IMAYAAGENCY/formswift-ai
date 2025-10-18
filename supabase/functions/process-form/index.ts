@@ -138,6 +138,31 @@ serve(async (req) => {
     // Process form (placeholder for actual AI processing)
     // TODO: Add actual form processing logic here
 
+    // Trigger n8n webhook if configured
+    const { data: webhookData } = await supabase
+      .from('profiles')
+      .select('n8n_webhook_url')
+      .eq('id', user.id)
+      .single();
+
+    if (webhookData?.n8n_webhook_url) {
+      try {
+        await fetch(webhookData.n8n_webhook_url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event: 'form_uploaded',
+            timestamp: new Date().toISOString(),
+            user_id: user.id,
+            form_data: formData,
+          }),
+        });
+        console.log('n8n webhook triggered for form upload');
+      } catch (error) {
+        console.error('Failed to trigger n8n webhook:', error);
+      }
+    }
+
     return new Response(
       JSON.stringify({ 
         success: true,

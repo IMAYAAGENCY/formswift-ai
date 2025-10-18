@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Navbar } from "@/components/Navbar";
-import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles } from "lucide-react";
+import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -31,7 +33,10 @@ const Dashboard = () => {
     formsUsed: number;
     formsLimit: number;
     expiryDate: string | null;
+    n8nWebhookUrl: string | null;
   } | null>(null);
+  const [webhookUrl, setWebhookUrl] = useState("");
+  const [isSavingWebhook, setIsSavingWebhook] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -96,7 +101,10 @@ const Dashboard = () => {
       formsUsed: profile.used_forms,
       formsLimit: profile.form_limit,
       expiryDate: profile.expiry_date,
+      n8nWebhookUrl: profile.n8n_webhook_url,
     });
+    
+    setWebhookUrl(profile.n8n_webhook_url || "");
 
     // Fetch user's forms
     const { data: formsData, error: formsError } = await supabase
@@ -307,6 +315,39 @@ const Dashboard = () => {
     }
   };
 
+  const handleSaveWebhook = async () => {
+    if (!webhookUrl.trim() && !userData?.n8nWebhookUrl) return;
+
+    setIsSavingWebhook(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const { error } = await supabase
+        .from('profiles')
+        .update({ n8n_webhook_url: webhookUrl.trim() || null })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      setUserData(prev => prev ? { ...prev, n8nWebhookUrl: webhookUrl.trim() || null } : null);
+
+      toast({
+        title: "Webhook saved",
+        description: webhookUrl.trim() ? "n8n webhook URL has been configured" : "n8n webhook URL has been removed",
+      });
+    } catch (error: any) {
+      console.error('Save webhook error:', error);
+      toast({
+        title: "Save failed",
+        description: "Could not save webhook URL. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSavingWebhook(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[var(--gradient-subtle)]">
       <Navbar />
@@ -436,6 +477,58 @@ const Dashboard = () => {
                   Form limit reached. Please upgrade to continue.
                 </p>
               )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* n8n Integration Section */}
+        <Card className="mb-8">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Webhook className="h-5 w-5 text-primary" />
+              <CardTitle>n8n Integration</CardTitle>
+            </div>
+            <CardDescription>
+              Connect your n8n workflow to receive webhooks on form uploads, payments, and AI processing
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="webhook-url">n8n Webhook URL</Label>
+                <Input
+                  id="webhook-url"
+                  type="url"
+                  placeholder="https://your-n8n-instance.com/webhook/your-webhook-id"
+                  value={webhookUrl}
+                  onChange={(e) => setWebhookUrl(e.target.value)}
+                />
+              </div>
+              <Button
+                onClick={handleSaveWebhook}
+                disabled={isSavingWebhook}
+                size="sm"
+              >
+                {isSavingWebhook ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Webhook
+                  </>
+                )}
+              </Button>
+              <div className="text-xs text-muted-foreground space-y-1">
+                <p>Webhook events:</p>
+                <ul className="list-disc list-inside ml-2">
+                  <li>form_uploaded - Triggered when a form is uploaded</li>
+                  <li>payment_verified - Triggered when payment is verified</li>
+                  <li>form_ai_processed - Triggered when AI processes a form</li>
+                </ul>
+              </div>
             </div>
           </CardContent>
         </Card>

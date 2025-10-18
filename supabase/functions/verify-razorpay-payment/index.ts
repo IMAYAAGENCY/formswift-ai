@@ -134,6 +134,34 @@ serve(async (req) => {
 
     console.log('Payment verified and profile updated for user:', user.id);
 
+    // Trigger n8n webhook if configured
+    const { data: webhookData } = await supabase
+      .from('profiles')
+      .select('n8n_webhook_url')
+      .eq('id', user.id)
+      .single();
+
+    if (webhookData?.n8n_webhook_url) {
+      try {
+        await fetch(webhookData.n8n_webhook_url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event: 'payment_verified',
+            timestamp: new Date().toISOString(),
+            user_id: user.id,
+            payment_id: razorpay_payment_id,
+            order_id: razorpay_order_id,
+            amount: amount / 100,
+            plan: planName,
+          }),
+        });
+        console.log('n8n webhook triggered for payment verification');
+      } catch (error) {
+        console.error('Failed to trigger n8n webhook:', error);
+      }
+    }
+
     return new Response(
       JSON.stringify({ 
         success: true,
