@@ -9,9 +9,10 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CreditCard, DollarSign, CheckCircle2, AlertCircle, Save } from "lucide-react";
+import { CreditCard, DollarSign, CheckCircle2, AlertCircle, Save, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { RazorpayCheckout } from "@/components/RazorpayCheckout";
 
 interface PaymentConfig {
   id?: string;
@@ -391,6 +392,32 @@ const PaymentIntegration = () => {
                     <Save className="mr-2 h-4 w-4" />
                     Save Configuration
                   </Button>
+
+                  {razorpayConfig.is_active && (
+                    <div className="mt-6 pt-6 border-t">
+                      <h4 className="font-semibold mb-3">Test Razorpay Integration</h4>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Click below to test your Razorpay configuration with a sample payment
+                      </p>
+                      <RazorpayCheckout
+                        amount={100}
+                        currency="INR"
+                        description="Test Payment"
+                        onSuccess={(paymentId) => {
+                          toast.success(`Payment successful! Payment ID: ${paymentId}`);
+                          loadTransactions();
+                        }}
+                        onError={(error) => {
+                          toast.error(`Payment failed: ${error}`);
+                        }}
+                      >
+                        <Button className="w-full" variant="outline">
+                          <Zap className="mr-2 h-4 w-4" />
+                          Test Payment (₹100)
+                        </Button>
+                      </RazorpayCheckout>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
