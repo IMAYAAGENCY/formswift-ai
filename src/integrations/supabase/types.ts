@@ -124,6 +124,81 @@ export type Database = {
           },
         ]
       }
+      approval_workflows: {
+        Row: {
+          created_at: string
+          description: string | null
+          form_id: string | null
+          id: string
+          is_active: boolean
+          name: string
+          steps: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          form_id?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          steps?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          form_id?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          steps?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      assignment_rules: {
+        Row: {
+          assign_to: string | null
+          assign_to_team: string | null
+          conditions: Json
+          created_at: string
+          form_id: string | null
+          id: string
+          is_active: boolean
+          priority: number
+          rule_name: string
+          user_id: string
+        }
+        Insert: {
+          assign_to?: string | null
+          assign_to_team?: string | null
+          conditions?: Json
+          created_at?: string
+          form_id?: string | null
+          id?: string
+          is_active?: boolean
+          priority?: number
+          rule_name: string
+          user_id: string
+        }
+        Update: {
+          assign_to?: string | null
+          assign_to_team?: string | null
+          conditions?: Json
+          created_at?: string
+          form_id?: string | null
+          id?: string
+          is_active?: boolean
+          priority?: number
+          rule_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -543,6 +618,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      form_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          assigned_to: string
+          completed_at: string | null
+          id: string
+          rule_id: string | null
+          status: string
+          submission_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          assigned_to: string
+          completed_at?: string | null
+          id?: string
+          rule_id?: string | null
+          status: string
+          submission_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          assigned_to?: string
+          completed_at?: string | null
+          id?: string
+          rule_id?: string | null
+          status?: string
+          submission_id?: string
+        }
+        Relationships: []
       }
       form_fields: {
         Row: {
@@ -1250,6 +1358,147 @@ export type Database = {
           id?: string
           resource?: string
           role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
+      sla_settings: {
+        Row: {
+          business_hours_only: boolean
+          created_at: string
+          escalation_rules: Json | null
+          first_response_hours: number | null
+          form_id: string | null
+          id: string
+          is_active: boolean
+          name: string
+          resolution_hours: number | null
+          user_id: string
+        }
+        Insert: {
+          business_hours_only?: boolean
+          created_at?: string
+          escalation_rules?: Json | null
+          first_response_hours?: number | null
+          form_id?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          resolution_hours?: number | null
+          user_id: string
+        }
+        Update: {
+          business_hours_only?: boolean
+          created_at?: string
+          escalation_rules?: Json | null
+          first_response_hours?: number | null
+          form_id?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          resolution_hours?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sla_tracking: {
+        Row: {
+          created_at: string
+          first_response_at: string | null
+          first_response_due: string | null
+          id: string
+          resolution_due: string | null
+          resolved_at: string | null
+          sla_id: string
+          status: string
+          submission_id: string
+        }
+        Insert: {
+          created_at?: string
+          first_response_at?: string | null
+          first_response_due?: string | null
+          id?: string
+          resolution_due?: string | null
+          resolved_at?: string | null
+          sla_id: string
+          status: string
+          submission_id: string
+        }
+        Update: {
+          created_at?: string
+          first_response_at?: string | null
+          first_response_due?: string | null
+          id?: string
+          resolution_due?: string | null
+          resolved_at?: string | null
+          sla_id?: string
+          status?: string
+          submission_id?: string
+        }
+        Relationships: []
+      }
+      submission_approvals: {
+        Row: {
+          approval_history: Json
+          created_at: string
+          current_step: number
+          id: string
+          status: string
+          submission_id: string
+          updated_at: string
+          workflow_id: string
+        }
+        Insert: {
+          approval_history?: Json
+          created_at?: string
+          current_step?: number
+          id?: string
+          status: string
+          submission_id: string
+          updated_at?: string
+          workflow_id: string
+        }
+        Update: {
+          approval_history?: Json
+          created_at?: string
+          current_step?: number
+          id?: string
+          status?: string
+          submission_id?: string
+          updated_at?: string
+          workflow_id?: string
+        }
+        Relationships: []
+      }
+      submission_notes: {
+        Row: {
+          attachments: Json | null
+          created_at: string
+          id: string
+          is_internal: boolean
+          note_text: string
+          submission_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attachments?: Json | null
+          created_at?: string
+          id?: string
+          is_internal?: boolean
+          note_text: string
+          submission_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attachments?: Json | null
+          created_at?: string
+          id?: string
+          is_internal?: boolean
+          note_text?: string
+          submission_id?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

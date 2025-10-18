@@ -43,7 +43,8 @@ import {
   GitBranch,
   CreditCard,
   Mail,
-  Database
+  Database,
+  Workflow
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -542,6 +543,13 @@ const Dashboard = () => {
           >
             <Users className="h-6 w-6" />
             <span className="text-sm font-semibold">Profiling</span>
+          </Button>
+          <Button
+            onClick={() => navigate("/collaboration-workflow")}
+            className="flex flex-col gap-2 h-auto py-4"
+          >
+            <Workflow className="h-6 w-6" />
+            <span className="text-sm font-semibold">Workflow</span>
           </Button>
         </div>
 
