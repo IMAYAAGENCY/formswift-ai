@@ -50,6 +50,231 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_webhooks: {
+        Row: {
+          created_at: string
+          events: string[]
+          id: string
+          is_active: boolean
+          name: string
+          secret_key: string | null
+          updated_at: string
+          url: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          events: string[]
+          id?: string
+          is_active?: boolean
+          name: string
+          secret_key?: string | null
+          updated_at?: string
+          url: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          events?: string[]
+          id?: string
+          is_active?: boolean
+          name?: string
+          secret_key?: string | null
+          updated_at?: string
+          url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      form_ab_tests: {
+        Row: {
+          conversions: number
+          created_at: string
+          form_id: string
+          id: string
+          is_active: boolean
+          updated_at: string
+          variant_data: Json
+          variant_name: string
+          views: number
+        }
+        Insert: {
+          conversions?: number
+          created_at?: string
+          form_id: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          variant_data: Json
+          variant_name: string
+          views?: number
+        }
+        Update: {
+          conversions?: number
+          created_at?: string
+          form_id?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          variant_data?: Json
+          variant_name?: string
+          views?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_ab_tests_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      form_analytics: {
+        Row: {
+          avg_time_to_complete: number | null
+          completion_rate: number | null
+          created_at: string
+          form_id: string
+          id: string
+          last_viewed_at: string | null
+          submissions: number
+          updated_at: string
+          views: number
+        }
+        Insert: {
+          avg_time_to_complete?: number | null
+          completion_rate?: number | null
+          created_at?: string
+          form_id: string
+          id?: string
+          last_viewed_at?: string | null
+          submissions?: number
+          updated_at?: string
+          views?: number
+        }
+        Update: {
+          avg_time_to_complete?: number | null
+          completion_rate?: number | null
+          created_at?: string
+          form_id?: string
+          id?: string
+          last_viewed_at?: string | null
+          submissions?: number
+          updated_at?: string
+          views?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_analytics_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: true
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      form_templates: {
+        Row: {
+          category: string
+          created_at: string
+          creator_id: string
+          description: string | null
+          downloads: number
+          id: string
+          is_public: boolean
+          price: number | null
+          rating: number | null
+          template_data: Json
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          creator_id: string
+          description?: string | null
+          downloads?: number
+          id?: string
+          is_public?: boolean
+          price?: number | null
+          rating?: number | null
+          template_data: Json
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          creator_id?: string
+          description?: string | null
+          downloads?: number
+          id?: string
+          is_public?: boolean
+          price?: number | null
+          rating?: number | null
+          template_data?: Json
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       forms: {
         Row: {
           ai_filled_link: string | null
@@ -212,6 +437,65 @@ export type Database = {
           referred_user_id?: string
           referrer_user_id?: string
           status?: string
+        }
+        Relationships: []
+      }
+      team_members: {
+        Row: {
+          id: string
+          joined_at: string
+          role: string
+          team_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          role?: string
+          team_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          role?: string
+          team_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teams: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          owner_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          updated_at?: string
         }
         Relationships: []
       }

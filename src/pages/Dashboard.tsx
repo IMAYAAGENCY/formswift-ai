@@ -11,7 +11,7 @@ import { AnimatedUploadDemo } from "@/components/AnimatedUploadDemo";
 import { AnimatedUpgradeDemo } from "@/components/AnimatedUpgradeDemo";
 import { N8nWorkflowGuide } from "@/components/N8nWorkflowGuide";
 import { AffiliateSection } from "@/components/AffiliateSection";
-import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save, Bot, Video } from "lucide-react";
+import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save, Bot, Video, BarChart3, Users, Layers, Zap } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -378,6 +378,30 @@ const Dashboard = () => {
       <Navbar />
       
       <div className="container mx-auto px-4 pt-24 pb-12">
+        {/* Quick Access Features */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+          <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => navigate("/ai-assistant")}>
+            <Bot className="h-6 w-6" />
+            <span className="text-sm">AI Assistant</span>
+          </Button>
+          <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => navigate("/analytics")}>
+            <BarChart3 className="h-6 w-6" />
+            <span className="text-sm">Analytics</span>
+          </Button>
+          <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => navigate("/templates")}>
+            <Layers className="h-6 w-6" />
+            <span className="text-sm">Templates</span>
+          </Button>
+          <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => navigate("/teams")}>
+            <Users className="h-6 w-6" />
+            <span className="text-sm">Teams</span>
+          </Button>
+          <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => navigate("/webhooks")}>
+            <Zap className="h-6 w-6" />
+            <span className="text-sm">Webhooks</span>
+          </Button>
+        </div>
+
         <div className="mb-8 flex justify-between items-start">
           <div>
             <h1 className="text-4xl font-bold mb-2">Welcome back, {userData.name}! 👋</h1>

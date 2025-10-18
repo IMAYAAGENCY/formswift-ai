@@ -9,6 +9,11 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import AIAssistant from "./pages/AIAssistant";
+import Analytics from "./pages/Analytics";
+import Templates from "./pages/Templates";
+import Teams from "./pages/Teams";
+import Webhooks from "./pages/Webhooks";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +29,11 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/ai-assistant" element={<AIAssistant />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/templates" element={<Templates />} />
+          <Route path="/teams" element={<Teams />} />
+          <Route path="/webhooks" element={<Webhooks />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
