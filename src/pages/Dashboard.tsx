@@ -537,17 +537,15 @@ const Dashboard = () => {
               {/* How to Upload Form */}
               <div className="space-y-3">
                 <div className="relative aspect-video rounded-lg border-2 border-primary/30 overflow-hidden bg-black">
-                  <video 
-                    controls 
-                    className="w-full h-full object-cover"
-                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'%3E%3Crect width='800' height='450' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23fff' font-size='24' font-family='system-ui'%3EHow to Upload Forms%3C/text%3E%3C/svg%3E"
-                  >
-                    <source src="/videos/how-to-upload.mp4" type="video/mp4" />
-                    {/* Alternative: Use iframe for YouTube/Vimeo */}
-                    {/* <iframe className="w-full h-full" src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe> */}
-                    Your browser does not support the video tag.
-                  </video>
-                  <div className="absolute top-3 right-3">
+                  <iframe 
+                    className="w-full h-full" 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=example" 
+                    title="How to Upload Forms Tutorial"
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowFullScreen
+                  ></iframe>
+                  <div className="absolute top-3 right-3 pointer-events-none">
                     <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
                       2 min
                     </Badge>
@@ -570,17 +568,15 @@ const Dashboard = () => {
               {/* How to Upgrade Plan */}
               <div className="space-y-3">
                 <div className="relative aspect-video rounded-lg border-2 border-accent/30 overflow-hidden bg-black">
-                  <video 
-                    controls 
-                    className="w-full h-full object-cover"
-                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'%3E%3Crect width='800' height='450' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23fff' font-size='24' font-family='system-ui'%3EHow to Upgrade Your Plan%3C/text%3E%3C/svg%3E"
-                  >
-                    <source src="/videos/how-to-upgrade.mp4" type="video/mp4" />
-                    {/* Alternative: Use iframe for YouTube/Vimeo */}
-                    {/* <iframe className="w-full h-full" src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe> */}
-                    Your browser does not support the video tag.
-                  </video>
-                  <div className="absolute top-3 right-3">
+                  <iframe 
+                    className="w-full h-full" 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=example2" 
+                    title="How to Upgrade Your Plan Tutorial"
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowFullScreen
+                  ></iframe>
+                  <div className="absolute top-3 right-3 pointer-events-none">
                     <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
                       1.5 min
                     </Badge>
