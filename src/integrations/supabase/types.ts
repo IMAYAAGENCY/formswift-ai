@@ -274,6 +274,36 @@ export type Database = {
         }
         Relationships: []
       }
+      blocked_ips: {
+        Row: {
+          blocked_until: string | null
+          created_at: string
+          id: string
+          ip_address: unknown
+          is_permanent: boolean
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          ip_address: unknown
+          is_permanent?: boolean
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          blocked_until?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown
+          is_permanent?: boolean
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           created_at: string
@@ -905,6 +935,51 @@ export type Database = {
           },
         ]
       }
+      form_security_settings: {
+        Row: {
+          captcha_enabled: boolean
+          captcha_provider: string | null
+          created_at: string
+          form_id: string
+          id: string
+          ip_blocking_enabled: boolean
+          password_hash: string | null
+          rate_limit_enabled: boolean
+          rate_limit_max_attempts: number | null
+          rate_limit_window_minutes: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          captcha_enabled?: boolean
+          captcha_provider?: string | null
+          created_at?: string
+          form_id: string
+          id?: string
+          ip_blocking_enabled?: boolean
+          password_hash?: string | null
+          rate_limit_enabled?: boolean
+          rate_limit_max_attempts?: number | null
+          rate_limit_window_minutes?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          captcha_enabled?: boolean
+          captcha_provider?: string | null
+          created_at?: string
+          form_id?: string
+          id?: string
+          ip_blocking_enabled?: boolean
+          password_hash?: string | null
+          rate_limit_enabled?: boolean
+          rate_limit_max_attempts?: number | null
+          rate_limit_window_minutes?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       form_signatures: {
         Row: {
           form_id: string
@@ -1499,6 +1574,36 @@ export type Database = {
           submission_id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      submission_rate_limits: {
+        Row: {
+          attempt_count: number
+          blocked_until: string | null
+          first_attempt_at: string
+          form_id: string
+          id: string
+          identifier: string
+          last_attempt_at: string
+        }
+        Insert: {
+          attempt_count?: number
+          blocked_until?: string | null
+          first_attempt_at?: string
+          form_id: string
+          id?: string
+          identifier: string
+          last_attempt_at?: string
+        }
+        Update: {
+          attempt_count?: number
+          blocked_until?: string | null
+          first_attempt_at?: string
+          form_id?: string
+          id?: string
+          identifier?: string
+          last_attempt_at?: string
         }
         Relationships: []
       }
