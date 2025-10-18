@@ -484,6 +484,43 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
+        {/* Demo Test Section */}
+        <Card className="mb-8 border-2 border-accent/50 bg-gradient-to-br from-accent/5 to-primary/5">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-accent" />
+              <CardTitle>Test AI Form Filling</CardTitle>
+            </div>
+            <CardDescription>
+              Try out the AI form filling feature with a demo. Upload a blank form and watch AI fill it with realistic data.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="bg-card p-4 rounded-lg border">
+                <h4 className="font-semibold mb-2 flex items-center gap-2">
+                  <FileText className="h-4 w-4" />
+                  How to Test:
+                </h4>
+                <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
+                  <li>Upload a blank form (admission form, application form, registration form, etc.)</li>
+                  <li>Click the "Process" button on your uploaded form</li>
+                  <li>Wait a few seconds while AI analyzes and fills the form</li>
+                  <li>View the AI-generated filled data in the form details</li>
+                  <li>Use "Ask AI" to get specific information about any form field</li>
+                </ol>
+              </div>
+              <div className="flex items-center gap-3 bg-primary/10 p-4 rounded-lg">
+                <Sparkles className="h-8 w-8 text-primary flex-shrink-0" />
+                <div className="text-sm">
+                  <p className="font-semibold">Powered by Advanced AI</p>
+                  <p className="text-muted-foreground">Our AI recognizes form fields and generates realistic, contextually appropriate data for each field automatically.</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* n8n Integration Section */}
         <Card className="mb-8">
           <CardHeader>
