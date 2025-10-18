@@ -536,16 +536,17 @@ const Dashboard = () => {
             <div className="grid md:grid-cols-2 gap-6">
               {/* How to Upload Form */}
               <div className="space-y-3">
-                <div className="relative aspect-video bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg border-2 border-primary/30 overflow-hidden group cursor-pointer hover:border-primary/60 transition-all">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                    <div className="bg-primary/90 p-4 rounded-full group-hover:scale-110 transition-transform">
-                      <PlayCircle className="h-10 w-10 text-primary-foreground" />
-                    </div>
-                    <div className="text-center px-4">
-                      <h3 className="font-semibold text-lg mb-1">How to Upload Forms</h3>
-                      <p className="text-sm text-muted-foreground">Step-by-step guide</p>
-                    </div>
-                  </div>
+                <div className="relative aspect-video rounded-lg border-2 border-primary/30 overflow-hidden bg-black">
+                  <video 
+                    controls 
+                    className="w-full h-full object-cover"
+                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'%3E%3Crect width='800' height='450' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23fff' font-size='24' font-family='system-ui'%3EHow to Upload Forms%3C/text%3E%3C/svg%3E"
+                  >
+                    <source src="/videos/how-to-upload.mp4" type="video/mp4" />
+                    {/* Alternative: Use iframe for YouTube/Vimeo */}
+                    {/* <iframe className="w-full h-full" src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe> */}
+                    Your browser does not support the video tag.
+                  </video>
                   <div className="absolute top-3 right-3">
                     <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
                       2 min
@@ -568,16 +569,17 @@ const Dashboard = () => {
 
               {/* How to Upgrade Plan */}
               <div className="space-y-3">
-                <div className="relative aspect-video bg-gradient-to-br from-accent/20 to-primary/20 rounded-lg border-2 border-accent/30 overflow-hidden group cursor-pointer hover:border-accent/60 transition-all">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                    <div className="bg-accent/90 p-4 rounded-full group-hover:scale-110 transition-transform">
-                      <PlayCircle className="h-10 w-10 text-accent-foreground" />
-                    </div>
-                    <div className="text-center px-4">
-                      <h3 className="font-semibold text-lg mb-1">How to Upgrade Your Plan</h3>
-                      <p className="text-sm text-muted-foreground">Simple upgrade process</p>
-                    </div>
-                  </div>
+                <div className="relative aspect-video rounded-lg border-2 border-accent/30 overflow-hidden bg-black">
+                  <video 
+                    controls 
+                    className="w-full h-full object-cover"
+                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'%3E%3Crect width='800' height='450' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23fff' font-size='24' font-family='system-ui'%3EHow to Upgrade Your Plan%3C/text%3E%3C/svg%3E"
+                  >
+                    <source src="/videos/how-to-upgrade.mp4" type="video/mp4" />
+                    {/* Alternative: Use iframe for YouTube/Vimeo */}
+                    {/* <iframe className="w-full h-full" src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe> */}
+                    Your browser does not support the video tag.
+                  </video>
                   <div className="absolute top-3 right-3">
                     <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
                       1.5 min
