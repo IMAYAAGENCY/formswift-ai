@@ -27,6 +27,7 @@ interface PaymentConfig {
 const PaymentIntegration = () => {
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [testPlanId, setTestPlanId] = useState("");
   
   const [stripeConfig, setStripeConfig] = useState<PaymentConfig>({
     provider: 'stripe',
@@ -428,67 +429,39 @@ const PaymentIntegration = () => {
                         <Input
                           placeholder="Enter plan_id (e.g., plan_xxxxx)"
                           className="mb-3"
-                          id="test-plan-id"
+                          value={testPlanId}
+                          onChange={(e) => setTestPlanId(e.target.value)}
                         />
-                        <Button
-                          className="w-full"
-                          variant="outline"
-                          onClick={() => {
-                            const planIdInput = document.getElementById('test-plan-id') as HTMLInputElement;
-                            const planId = planIdInput?.value;
-                            
-                            if (!planId) {
-                              toast.error("Please enter a plan ID");
-                              return;
-                            }
-
-                            // Create subscription component dynamically
-                            const handleSubscriptionTest = async () => {
-                              try {
-                                const { data, error } = await supabase.functions.invoke(
-                                  "razorpay-create-subscription",
-                                  {
-                                    body: { 
-                                      planId,
-                                      quantity: 1,
-                                    },
-                                  }
-                                );
-
-                                if (error) throw error;
-
-                                const options = {
-                                  key: data.keyId,
-                                  subscription_id: data.subscriptionId,
-                                  name: "FormSwift AI",
-                                  description: "Test Subscription",
-                                  subscription_card_change: true,
-                                  handler: function (response: any) {
-                                    toast.success("Subscription activated!");
-                                    console.log("Subscription ID:", response.razorpay_subscription_id);
-                                    console.log("Payment ID:", response.razorpay_payment_id);
-                                  },
-                                  theme: {
-                                    color: "#8B5CF6",
-                                  },
-                                };
-
-                                const razorpay = new (window as any).Razorpay(options);
-                                razorpay.on("payment.failed", function (response: any) {
-                                  toast.error(response.error.description || "Subscription failed");
-                                });
-                                razorpay.open();
-                              } catch (error: any) {
-                                toast.error(error.message || "Failed to create subscription");
-                              }
-                            };
-
-                            handleSubscriptionTest();
-                          }}
-                        >
-                          <Repeat className="mr-2 h-4 w-4" />
-                          Test Subscription
-                        </Button>
+                        {testPlanId ? (
+                          <RazorpaySubscription
+                            planId={testPlanId}
+                            planName="Test Plan"
+                            planDescription="Test Subscription"
+                            quantity={1}
+                            onSuccess={(subscriptionId, paymentId) => {
+                              toast.success(`Subscription successful! ID: ${subscriptionId}`);
+                              loadTransactions();
+                            }}
+                            onError={(error) => {
+                              toast.error(`Subscription failed: ${error}`);
+                            }}
+                          >
+                            <Button className="w-full" variant="outline">
+                              <Repeat className="mr-2 h-4 w-4" />
+                              Test Subscription
+                            </Button>
+                          </RazorpaySubscription>
+                        ) : (
+                          <Button 
+                            className="w-full" 
+                            variant="outline" 
+                            disabled
+                            onClick={() => toast.error("Please enter a plan ID")}
+                          >
+                            <Repeat className="mr-2 h-4 w-4" />
+                            Test Subscription
+                          </Button>
+                        )}
                       </div>
                     </div>
                   )}
