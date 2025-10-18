@@ -74,6 +74,24 @@ serve(async (req) => {
       );
     }
 
+    // Download the form file from storage
+    const { data: fileData, error: fileError } = await supabase.storage
+      .from('uploaded-forms')
+      .download(form.file_link.split('/uploaded-forms/')[1]);
+
+    if (fileError || !fileData) {
+      return new Response(
+        JSON.stringify({ error: 'Failed to download form file' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Convert file to base64
+    const arrayBuffer = await fileData.arrayBuffer();
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+    const mimeType = fileData.type || 'image/jpeg';
+    const base64Image = `data:${mimeType};base64,${base64}`;
+
     // Call Lovable AI to analyze the form
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
@@ -91,19 +109,43 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are an expert form processor. Analyze the uploaded form and extract all fields, data, and structure. 
-            Return a structured summary including:
-            - Form type (e.g., application, tax form, survey)
-            - All field names and their current values
-            - Any instructions or notes
-            - Suggestions for filling out empty fields
+            content: `You are an expert form filling assistant. Analyze the form image and fill it out with realistic sample data.
             
-            Format your response as clear, organized JSON.`
+            IMPORTANT INSTRUCTIONS:
+            1. Identify ALL empty fields in the form
+            2. Fill each field with appropriate, realistic sample data
+            3. Use proper formatting for each field type (dates, phone numbers, addresses, etc.)
+            4. For personal information fields, use realistic example names, addresses, etc.
+            5. Return the filled data as a clear, structured JSON object with field names as keys
+            
+            Example output format:
+            {
+              "Student's Name": "John Michael Smith",
+              "Father's Name": "Robert Smith",
+              "Mother's Name": "Sarah Smith",
+              "Birth Date": "15/03/2005",
+              "Gender": "Male",
+              "Religion": "Christian",
+              "Nationality": "American",
+              "Phone Number": "+1-555-0123",
+              "Email Address": "john.smith@email.com",
+              ...and so on for all fields
+            }`
           },
           {
             role: 'user',
-            content: `Analyze this form: ${form.form_name}. File location: ${form.file_link}. 
-            Extract all visible fields and provide insights on how to complete it.`
+            content: [
+              {
+                type: 'text',
+                text: `Please analyze this form (${form.form_name}) and fill out ALL empty fields with appropriate sample data. Return a complete JSON object with all field names and their filled values.`
+              },
+              {
+                type: 'image_url',
+                image_url: {
+                  url: base64Image
+                }
+              }
+            ]
           }
         ],
       }),
