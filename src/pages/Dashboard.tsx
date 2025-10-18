@@ -5,7 +5,9 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Navbar } from "@/components/Navbar";
-import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save } from "lucide-react";
+import { ChatWidget } from "@/components/ChatWidget";
+import { FormAssistantModal } from "@/components/FormAssistantModal";
+import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save, Bot } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -37,6 +39,7 @@ const Dashboard = () => {
   } | null>(null);
   const [webhookUrl, setWebhookUrl] = useState("");
   const [isSavingWebhook, setIsSavingWebhook] = useState(false);
+  const [selectedFormForAssistant, setSelectedFormForAssistant] = useState<{id: string; name: string} | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -587,6 +590,14 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setSelectedFormForAssistant({id: form.id, name: form.form_name})}
+                      >
+                        <Bot className="h-4 w-4 mr-1" />
+                        Ask AI
+                      </Button>
                       {!form.ai_filled_link && (
                         <Button 
                           variant="default" 
@@ -640,6 +651,15 @@ const Dashboard = () => {
           if (user) await fetchUserData(user.id);
         }}
       />
+
+      <FormAssistantModal
+        open={!!selectedFormForAssistant}
+        onOpenChange={(open) => !open && setSelectedFormForAssistant(null)}
+        formId={selectedFormForAssistant?.id || ""}
+        formName={selectedFormForAssistant?.name || ""}
+      />
+
+      <ChatWidget />
     </div>
   );
 };
