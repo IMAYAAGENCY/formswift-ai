@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Navbar } from "@/components/Navbar";
 import { ChatWidget } from "@/components/ChatWidget";
 import { FormAssistantModal } from "@/components/FormAssistantModal";
-import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save, Bot } from "lucide-react";
+import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save, Bot, PlayCircle, Video } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -515,6 +515,100 @@ const Dashboard = () => {
                 <div className="text-sm">
                   <p className="font-semibold">Powered by Advanced AI</p>
                   <p className="text-muted-foreground">Our AI recognizes form fields and generates realistic, contextually appropriate data for each field automatically.</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Video Tutorials Section */}
+        <Card className="mb-8 border-2 bg-gradient-to-br from-primary/5 to-accent/5">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Video className="h-5 w-5 text-primary" />
+              <CardTitle>Video Tutorials</CardTitle>
+            </div>
+            <CardDescription>
+              Learn how to use the platform with these quick video guides
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* How to Upload Form */}
+              <div className="space-y-3">
+                <div className="relative aspect-video bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg border-2 border-primary/30 overflow-hidden group cursor-pointer hover:border-primary/60 transition-all">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                    <div className="bg-primary/90 p-4 rounded-full group-hover:scale-110 transition-transform">
+                      <PlayCircle className="h-10 w-10 text-primary-foreground" />
+                    </div>
+                    <div className="text-center px-4">
+                      <h3 className="font-semibold text-lg mb-1">How to Upload Forms</h3>
+                      <p className="text-sm text-muted-foreground">Step-by-step guide</p>
+                    </div>
+                  </div>
+                  <div className="absolute top-3 right-3">
+                    <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
+                      2 min
+                    </Badge>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <Upload className="h-4 w-4 text-primary" />
+                    What You'll Learn:
+                  </h4>
+                  <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside ml-2">
+                    <li>Choosing and uploading form files</li>
+                    <li>Supported file formats (PDF, JPG, PNG, DOC)</li>
+                    <li>Processing forms with AI</li>
+                    <li>Viewing and managing filled forms</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* How to Upgrade Plan */}
+              <div className="space-y-3">
+                <div className="relative aspect-video bg-gradient-to-br from-accent/20 to-primary/20 rounded-lg border-2 border-accent/30 overflow-hidden group cursor-pointer hover:border-accent/60 transition-all">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                    <div className="bg-accent/90 p-4 rounded-full group-hover:scale-110 transition-transform">
+                      <PlayCircle className="h-10 w-10 text-accent-foreground" />
+                    </div>
+                    <div className="text-center px-4">
+                      <h3 className="font-semibold text-lg mb-1">How to Upgrade Your Plan</h3>
+                      <p className="text-sm text-muted-foreground">Simple upgrade process</p>
+                    </div>
+                  </div>
+                  <div className="absolute top-3 right-3">
+                    <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
+                      1.5 min
+                    </Badge>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <Crown className="h-4 w-4 text-accent" />
+                    What You'll Learn:
+                  </h4>
+                  <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside ml-2">
+                    <li>Choosing the right plan for your needs</li>
+                    <li>Secure payment process with Razorpay</li>
+                    <li>Instant plan activation</li>
+                    <li>Managing your subscription</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 bg-muted/50 p-4 rounded-lg">
+              <div className="flex items-start gap-3">
+                <FileText className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                <div className="text-sm">
+                  <p className="font-semibold mb-1">Quick Tips:</p>
+                  <ul className="text-muted-foreground space-y-1">
+                    <li>• Free plan includes 2 forms - perfect for trying out the service</li>
+                    <li>• Pro and Premium plans offer unlimited forms and priority processing</li>
+                    <li>• All plans include AI-powered form filling and customer support</li>
+                  </ul>
                 </div>
               </div>
             </div>
