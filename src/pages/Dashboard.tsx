@@ -35,7 +35,10 @@ import {
   UserCircle,
   LogOut,
   Award,
-  Brain
+  Brain,
+  Palette,
+  Code,
+  Briefcase
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -468,6 +471,30 @@ const Dashboard = () => {
           >
             <UserCircle className="h-6 w-6" />
             <span className="text-sm font-semibold">Collaboration</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="h-24 flex-col gap-2 bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-amber-500/30 hover:border-amber-500/50"
+            onClick={() => navigate("/white-label")}
+          >
+            <Palette className="h-6 w-6" />
+            <span className="text-sm font-semibold">White Label</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="h-24 flex-col gap-2 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border-cyan-500/30 hover:border-cyan-500/50"
+            onClick={() => navigate("/api-marketplace")}
+          >
+            <Code className="h-6 w-6" />
+            <span className="text-sm font-semibold">API Market</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="h-24 flex-col gap-2 bg-gradient-to-br from-teal-500/10 to-green-500/10 border-teal-500/30 hover:border-teal-500/50"
+            onClick={() => navigate("/consulting")}
+          >
+            <Briefcase className="h-6 w-6" />
+            <span className="text-sm font-semibold">Consulting</span>
           </Button>
         </div>
 

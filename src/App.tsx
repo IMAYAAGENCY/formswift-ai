@@ -19,6 +19,9 @@ import AIAutomation from "./pages/AIAutomation";
 import Security from "./pages/Security";
 import FormBuilder from "./pages/FormBuilder";
 import Collaboration from "./pages/Collaboration";
+import WhiteLabel from "./pages/WhiteLabel";
+import APIMarketplace from "./pages/APIMarketplace";
+import Consulting from "./pages/Consulting";
 import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
 
 const queryClient = new QueryClient();
@@ -46,6 +49,9 @@ const App = () => (
           <Route path="/security" element={<Security />} />
           <Route path="/form-builder" element={<FormBuilder />} />
           <Route path="/collaboration" element={<Collaboration />} />
+          <Route path="/white-label" element={<WhiteLabel />} />
+          <Route path="/api-marketplace" element={<APIMarketplace />} />
+          <Route path="/consulting" element={<Consulting />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
