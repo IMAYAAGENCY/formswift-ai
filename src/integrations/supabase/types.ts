@@ -300,6 +300,42 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_integrations: {
+        Row: {
+          api_key_encrypted: string
+          created_at: string
+          id: string
+          instance_url: string | null
+          is_active: boolean
+          provider: string
+          sync_settings: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          api_key_encrypted: string
+          created_at?: string
+          id?: string
+          instance_url?: string | null
+          is_active?: boolean
+          provider: string
+          sync_settings?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          api_key_encrypted?: string
+          created_at?: string
+          id?: string
+          instance_url?: string | null
+          is_active?: boolean
+          provider?: string
+          sync_settings?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       custom_webhooks: {
         Row: {
           created_at: string
@@ -332,6 +368,42 @@ export type Database = {
           secret_key?: string | null
           updated_at?: string
           url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      email_integrations: {
+        Row: {
+          api_key_encrypted: string
+          created_at: string
+          id: string
+          is_active: boolean
+          list_id: string | null
+          provider: string
+          sync_settings: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          api_key_encrypted: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          list_id?: string | null
+          provider: string
+          sync_settings?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          api_key_encrypted?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          list_id?: string | null
+          provider?: string
+          sync_settings?: Json | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -612,6 +684,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      form_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          form_id: string
+          id: string
+          payer_email: string | null
+          payment_id: string | null
+          payment_provider: string
+          status: string
+          submission_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          form_id: string
+          id?: string
+          payer_email?: string | null
+          payment_id?: string | null
+          payment_provider: string
+          status: string
+          submission_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          form_id?: string
+          id?: string
+          payer_email?: string | null
+          payment_id?: string | null
+          payment_provider?: string
+          status?: string
+          submission_id?: string | null
+        }
+        Relationships: []
       }
       form_recommendations: {
         Row: {
@@ -920,6 +1031,45 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_integrations: {
+        Row: {
+          api_key_encrypted: string | null
+          created_at: string
+          currency: string
+          id: string
+          is_active: boolean
+          provider: string
+          test_mode: boolean
+          updated_at: string
+          user_id: string
+          webhook_secret: string | null
+        }
+        Insert: {
+          api_key_encrypted?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          provider: string
+          test_mode?: boolean
+          updated_at?: string
+          user_id: string
+          webhook_secret?: string | null
+        }
+        Update: {
+          api_key_encrypted?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          provider?: string
+          test_mode?: boolean
+          updated_at?: string
+          user_id?: string
+          webhook_secret?: string | null
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number
@@ -995,6 +1145,39 @@ export type Database = {
           referral_conversions?: number
           referred_by?: string | null
           used_forms?: number
+        }
+        Relationships: []
+      }
+      progressive_profiles: {
+        Row: {
+          collected_data: Json
+          completion_percentage: number | null
+          created_at: string
+          id: string
+          interaction_count: number
+          last_interaction: string
+          profile_email: string
+          user_id: string
+        }
+        Insert: {
+          collected_data?: Json
+          completion_percentage?: number | null
+          created_at?: string
+          id?: string
+          interaction_count?: number
+          last_interaction?: string
+          profile_email: string
+          user_id: string
+        }
+        Update: {
+          collected_data?: Json
+          completion_percentage?: number | null
+          created_at?: string
+          id?: string
+          interaction_count?: number
+          last_interaction?: string
+          profile_email?: string
+          user_id?: string
         }
         Relationships: []
       }

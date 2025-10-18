@@ -38,7 +38,12 @@ import {
   Brain,
   Palette,
   Code,
-  Briefcase
+  Briefcase,
+  FlaskConical,
+  GitBranch,
+  CreditCard,
+  Mail,
+  Database
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -495,6 +500,48 @@ const Dashboard = () => {
           >
             <Briefcase className="h-6 w-6" />
             <span className="text-sm font-semibold">Consulting</span>
+          </Button>
+          <Button
+            onClick={() => navigate("/ab-testing")}
+            className="flex flex-col gap-2 h-auto py-4"
+          >
+            <FlaskConical className="h-6 w-6" />
+            <span className="text-sm font-semibold">A/B Testing</span>
+          </Button>
+          <Button
+            onClick={() => navigate("/conditional-logic")}
+            className="flex flex-col gap-2 h-auto py-4"
+          >
+            <GitBranch className="h-6 w-6" />
+            <span className="text-sm font-semibold">Logic Builder</span>
+          </Button>
+          <Button
+            onClick={() => navigate("/payment-integration")}
+            className="flex flex-col gap-2 h-auto py-4"
+          >
+            <CreditCard className="h-6 w-6" />
+            <span className="text-sm font-semibold">Payments</span>
+          </Button>
+          <Button
+            onClick={() => navigate("/email-integration")}
+            className="flex flex-col gap-2 h-auto py-4"
+          >
+            <Mail className="h-6 w-6" />
+            <span className="text-sm font-semibold">Email Marketing</span>
+          </Button>
+          <Button
+            onClick={() => navigate("/crm-integration")}
+            className="flex flex-col gap-2 h-auto py-4"
+          >
+            <Database className="h-6 w-6" />
+            <span className="text-sm font-semibold">CRM Sync</span>
+          </Button>
+          <Button
+            onClick={() => navigate("/progressive-profiling")}
+            className="flex flex-col gap-2 h-auto py-4"
+          >
+            <Users className="h-6 w-6" />
+            <span className="text-sm font-semibold">Profiling</span>
           </Button>
         </div>
 

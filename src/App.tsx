@@ -22,6 +22,12 @@ import Collaboration from "./pages/Collaboration";
 import WhiteLabel from "./pages/WhiteLabel";
 import APIMarketplace from "./pages/APIMarketplace";
 import Consulting from "./pages/Consulting";
+import ABTesting from "./pages/ABTesting";
+import ConditionalLogic from "./pages/ConditionalLogic";
+import PaymentIntegration from "./pages/PaymentIntegration";
+import EmailIntegration from "./pages/EmailIntegration";
+import CRMIntegration from "./pages/CRMIntegration";
+import ProgressiveProfiling from "./pages/ProgressiveProfiling";
 import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
 
 const queryClient = new QueryClient();
@@ -52,6 +58,12 @@ const App = () => (
           <Route path="/white-label" element={<WhiteLabel />} />
           <Route path="/api-marketplace" element={<APIMarketplace />} />
           <Route path="/consulting" element={<Consulting />} />
+          <Route path="/ab-testing" element={<ABTesting />} />
+          <Route path="/conditional-logic" element={<ConditionalLogic />} />
+          <Route path="/payment-integration" element={<PaymentIntegration />} />
+          <Route path="/email-integration" element={<EmailIntegration />} />
+          <Route path="/crm-integration" element={<CRMIntegration />} />
+          <Route path="/progressive-profiling" element={<ProgressiveProfiling />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
