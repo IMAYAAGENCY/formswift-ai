@@ -107,6 +107,16 @@ const Dashboard = () => {
       return;
     }
 
+    // Generate referral code if user doesn't have one
+    let referralCode = profile.referral_code;
+    if (!referralCode) {
+      referralCode = `REF${userId.substring(0, 8).toUpperCase()}`;
+      await supabase
+        .from('profiles')
+        .update({ referral_code: referralCode })
+        .eq('id', userId);
+    }
+
     setUserData({
       name: profile.name,
       plan: profile.plan_type,
@@ -114,7 +124,7 @@ const Dashboard = () => {
       formsLimit: profile.form_limit,
       expiryDate: profile.expiry_date,
       n8nWebhookUrl: profile.n8n_webhook_url,
-      referralCode: profile.referral_code,
+      referralCode: referralCode,
       referralConversions: profile.referral_conversions || 0,
       freePlansEarned: profile.free_plans_earned || 0,
     });
@@ -655,7 +665,7 @@ const Dashboard = () => {
         )}
 
         {/* Affiliate & Referral Section */}
-        {userData.referralCode && userId && (
+        {userId && userData.referralCode && (
           <AffiliateSection
             userId={userId}
             referralCode={userData.referralCode}
