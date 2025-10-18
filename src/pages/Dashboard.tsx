@@ -9,6 +9,7 @@ import { ChatWidget } from "@/components/ChatWidget";
 import { FormAssistantModal } from "@/components/FormAssistantModal";
 import { AnimatedUploadDemo } from "@/components/AnimatedUploadDemo";
 import { AnimatedUpgradeDemo } from "@/components/AnimatedUpgradeDemo";
+import { N8nWorkflowGuide } from "@/components/N8nWorkflowGuide";
 import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save, Bot, Video } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -638,6 +639,11 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* n8n Workflow Setup Guide */}
+        {userData.n8nWebhookUrl && (
+          <N8nWorkflowGuide />
+        )}
 
         {/* Recent Forms Section */}
         <Card>
