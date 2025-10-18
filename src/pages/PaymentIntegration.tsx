@@ -9,10 +9,11 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CreditCard, DollarSign, CheckCircle2, AlertCircle, Save, Zap } from "lucide-react";
+import { CreditCard, DollarSign, CheckCircle2, AlertCircle, Save, Zap, Repeat } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { RazorpayCheckout } from "@/components/RazorpayCheckout";
+import { RazorpaySubscription } from "@/components/RazorpaySubscription";
 
 interface PaymentConfig {
   id?: string;
@@ -394,28 +395,101 @@ const PaymentIntegration = () => {
                   </Button>
 
                   {razorpayConfig.is_active && (
-                    <div className="mt-6 pt-6 border-t">
-                      <h4 className="font-semibold mb-3">Test Razorpay Integration</h4>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Click below to test your Razorpay configuration with a sample payment
-                      </p>
-                      <RazorpayCheckout
-                        amount={100}
-                        currency="INR"
-                        description="Test Payment"
-                        onSuccess={(paymentId) => {
-                          toast.success(`Payment successful! Payment ID: ${paymentId}`);
-                          loadTransactions();
-                        }}
-                        onError={(error) => {
-                          toast.error(`Payment failed: ${error}`);
-                        }}
-                      >
-                        <Button className="w-full" variant="outline">
-                          <Zap className="mr-2 h-4 w-4" />
-                          Test Payment (₹100)
+                    <div className="mt-6 pt-6 border-t space-y-4">
+                      <div>
+                        <h4 className="font-semibold mb-3">Test One-Time Payment</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Test a single payment transaction
+                        </p>
+                        <RazorpayCheckout
+                          amount={100}
+                          currency="INR"
+                          description="Test Payment"
+                          onSuccess={(paymentId) => {
+                            toast.success(`Payment successful! ID: ${paymentId}`);
+                            loadTransactions();
+                          }}
+                          onError={(error) => {
+                            toast.error(`Payment failed: ${error}`);
+                          }}
+                        >
+                          <Button className="w-full" variant="outline">
+                            <Zap className="mr-2 h-4 w-4" />
+                            Test One-Time Payment (₹100)
+                          </Button>
+                        </RazorpayCheckout>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold mb-3">Test Subscription</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Test a subscription payment (requires a plan_id from your Razorpay dashboard)
+                        </p>
+                        <Input
+                          placeholder="Enter plan_id (e.g., plan_xxxxx)"
+                          className="mb-3"
+                          id="test-plan-id"
+                        />
+                        <Button
+                          className="w-full"
+                          variant="outline"
+                          onClick={() => {
+                            const planIdInput = document.getElementById('test-plan-id') as HTMLInputElement;
+                            const planId = planIdInput?.value;
+                            
+                            if (!planId) {
+                              toast.error("Please enter a plan ID");
+                              return;
+                            }
+
+                            // Create subscription component dynamically
+                            const handleSubscriptionTest = async () => {
+                              try {
+                                const { data, error } = await supabase.functions.invoke(
+                                  "razorpay-create-subscription",
+                                  {
+                                    body: { 
+                                      planId,
+                                      quantity: 1,
+                                    },
+                                  }
+                                );
+
+                                if (error) throw error;
+
+                                const options = {
+                                  key: data.keyId,
+                                  subscription_id: data.subscriptionId,
+                                  name: "FormSwift AI",
+                                  description: "Test Subscription",
+                                  subscription_card_change: true,
+                                  handler: function (response: any) {
+                                    toast.success("Subscription activated!");
+                                    console.log("Subscription ID:", response.razorpay_subscription_id);
+                                    console.log("Payment ID:", response.razorpay_payment_id);
+                                  },
+                                  theme: {
+                                    color: "#8B5CF6",
+                                  },
+                                };
+
+                                const razorpay = new (window as any).Razorpay(options);
+                                razorpay.on("payment.failed", function (response: any) {
+                                  toast.error(response.error.description || "Subscription failed");
+                                });
+                                razorpay.open();
+                              } catch (error: any) {
+                                toast.error(error.message || "Failed to create subscription");
+                              }
+                            };
+
+                            handleSubscriptionTest();
+                          }}
+                        >
+                          <Repeat className="mr-2 h-4 w-4" />
+                          Test Subscription
                         </Button>
-                      </RazorpayCheckout>
+                      </div>
                     </div>
                   )}
                 </CardContent>
