@@ -436,6 +436,100 @@ export type Database = {
           },
         ]
       }
+      form_funnel_steps: {
+        Row: {
+          completed: boolean | null
+          form_id: string
+          id: string
+          session_id: string
+          step_name: string
+          step_number: number
+          time_spent: number | null
+          timestamp: string
+          user_id: string | null
+        }
+        Insert: {
+          completed?: boolean | null
+          form_id: string
+          id?: string
+          session_id: string
+          step_name: string
+          step_number: number
+          time_spent?: number | null
+          timestamp?: string
+          user_id?: string | null
+        }
+        Update: {
+          completed?: boolean | null
+          form_id?: string
+          id?: string
+          session_id?: string
+          step_name?: string
+          step_number?: number
+          time_spent?: number | null
+          timestamp?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_funnel_steps_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      form_interactions: {
+        Row: {
+          element_id: string | null
+          element_type: string | null
+          form_id: string
+          id: string
+          interaction_type: string
+          metadata: Json | null
+          position_x: number | null
+          position_y: number | null
+          session_id: string
+          timestamp: string
+          user_id: string | null
+        }
+        Insert: {
+          element_id?: string | null
+          element_type?: string | null
+          form_id: string
+          id?: string
+          interaction_type: string
+          metadata?: Json | null
+          position_x?: number | null
+          position_y?: number | null
+          session_id: string
+          timestamp?: string
+          user_id?: string | null
+        }
+        Update: {
+          element_id?: string | null
+          element_type?: string | null
+          form_id?: string
+          id?: string
+          interaction_type?: string
+          metadata?: Json | null
+          position_x?: number | null
+          position_y?: number | null
+          session_id?: string
+          timestamp?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_interactions_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       form_recommendations: {
         Row: {
           created_at: string
