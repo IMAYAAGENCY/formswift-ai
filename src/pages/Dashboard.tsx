@@ -396,9 +396,13 @@ const Dashboard = () => {
             <Users className="h-6 w-6" />
             <span className="text-sm">Teams</span>
           </Button>
-          <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => navigate("/webhooks")}>
+          <Button 
+            variant="outline" 
+            className="h-24 flex-col gap-2 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border-purple-500/30 hover:border-purple-500/50"
+            onClick={() => navigate("/webhooks")}
+          >
             <Zap className="h-6 w-6" />
-            <span className="text-sm">Webhooks</span>
+            <span className="text-sm font-semibold">API & Webhooks</span>
           </Button>
           <Button 
             variant="outline" 
