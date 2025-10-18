@@ -17,6 +17,9 @@ import Webhooks from "./pages/Webhooks";
 import SmartForms from "./pages/SmartForms";
 import AIAutomation from "./pages/AIAutomation";
 import Security from "./pages/Security";
+import FormBuilder from "./pages/FormBuilder";
+import Collaboration from "./pages/Collaboration";
+import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +28,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <KeyboardShortcuts />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -40,6 +44,8 @@ const App = () => (
           <Route path="/smart-forms" element={<SmartForms />} />
           <Route path="/ai-automation" element={<AIAutomation />} />
           <Route path="/security" element={<Security />} />
+          <Route path="/form-builder" element={<FormBuilder />} />
+          <Route path="/collaboration" element={<Collaboration />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { FileText, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -28,6 +29,7 @@ export const Navbar = () => {
             <Link to="/auth" className="text-foreground/80 hover:text-foreground transition-colors">
               Login
             </Link>
+            <ThemeToggle />
             <Button variant="hero" asChild>
               <Link to="/auth">Get Started Free</Link>
             </Button>

@@ -11,7 +11,32 @@ import { AnimatedUploadDemo } from "@/components/AnimatedUploadDemo";
 import { AnimatedUpgradeDemo } from "@/components/AnimatedUpgradeDemo";
 import { N8nWorkflowGuide } from "@/components/N8nWorkflowGuide";
 import { AffiliateSection } from "@/components/AffiliateSection";
-import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save, Bot, Video, BarChart3, Users, Layers, Zap } from "lucide-react";
+import { SmartSearch } from "@/components/SmartSearch";
+import { 
+  Upload, 
+  FileText, 
+  Crown, 
+  Calendar, 
+  TrendingUp, 
+  Download, 
+  Trash2, 
+  Loader2, 
+  Sparkles, 
+  Webhook, 
+  Save, 
+  Bot, 
+  Video, 
+  BarChart3, 
+  Users, 
+  Layers, 
+  Zap,
+  Shield,
+  LayoutDashboard,
+  UserCircle,
+  LogOut,
+  Award,
+  Brain
+} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -428,6 +453,27 @@ const Dashboard = () => {
             <span className="text-2xl">🔒</span>
             <span className="text-sm font-semibold">Security</span>
           </Button>
+          <Button 
+            variant="outline" 
+            className="h-24 flex-col gap-2 bg-gradient-to-br from-indigo-500/10 to-violet-500/10 border-indigo-500/30 hover:border-indigo-500/50"
+            onClick={() => navigate("/form-builder")}
+          >
+            <LayoutDashboard className="h-6 w-6" />
+            <span className="text-sm font-semibold">Form Builder</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="h-24 flex-col gap-2 bg-gradient-to-br from-pink-500/10 to-rose-500/10 border-pink-500/30 hover:border-pink-500/50"
+            onClick={() => navigate("/collaboration")}
+          >
+            <UserCircle className="h-6 w-6" />
+            <span className="text-sm font-semibold">Collaboration</span>
+          </Button>
+        </div>
+
+        {/* Smart Search */}
+        <div className="mb-8">
+          <SmartSearch />
         </div>
 
         <div className="mb-8 flex justify-between items-start">
