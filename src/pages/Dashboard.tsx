@@ -379,7 +379,7 @@ const Dashboard = () => {
       
       <div className="container mx-auto px-4 pt-24 pb-12">
         {/* Quick Access Features */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-8">
           <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => navigate("/ai-assistant")}>
             <Bot className="h-6 w-6" />
             <span className="text-sm">AI Assistant</span>
@@ -415,6 +415,14 @@ const Dashboard = () => {
           >
             <span className="text-2xl">🤖</span>
             <span className="text-sm font-semibold">AI Automation</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="h-24 flex-col gap-2 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/30 hover:border-green-500/50"
+            onClick={() => navigate("/security")}
+          >
+            <span className="text-2xl">🔒</span>
+            <span className="text-sm font-semibold">Security</span>
           </Button>
         </div>
 

@@ -50,6 +50,42 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       batch_jobs: {
         Row: {
           completed_at: string | null
@@ -177,6 +213,27 @@ export type Database = {
           secret_key?: string | null
           updated_at?: string
           url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      encryption_keys: {
+        Row: {
+          created_at: string
+          id: string
+          key_hash: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key_hash: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key_hash?: string
           user_id?: string
         }
         Relationships: []
@@ -599,6 +656,36 @@ export type Database = {
         }
         Relationships: []
       }
+      gdpr_requests: {
+        Row: {
+          completed_at: string | null
+          data_url: string | null
+          id: string
+          request_type: string
+          requested_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          data_url?: string | null
+          id?: string
+          request_type: string
+          requested_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          data_url?: string | null
+          id?: string
+          request_type?: string
+          requested_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       logs: {
         Row: {
           action: string
@@ -737,6 +824,39 @@ export type Database = {
         }
         Relationships: []
       }
+      role_permissions: {
+        Row: {
+          can_create: boolean
+          can_delete: boolean
+          can_read: boolean
+          can_update: boolean
+          created_at: string
+          id: string
+          resource: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          can_create?: boolean
+          can_delete?: boolean
+          can_read?: boolean
+          can_update?: boolean
+          created_at?: string
+          id?: string
+          resource: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          can_create?: boolean
+          can_delete?: boolean
+          can_read?: boolean
+          can_update?: boolean
+          created_at?: string
+          id?: string
+          resource?: string
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           id: string
@@ -793,6 +913,39 @@ export type Database = {
           name?: string
           owner_id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      two_factor_auth: {
+        Row: {
+          backup_codes: string[] | null
+          created_at: string
+          enabled: boolean
+          id: string
+          secret: string | null
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          backup_codes?: string[] | null
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          secret?: string | null
+          updated_at?: string
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          backup_codes?: string[] | null
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          secret?: string | null
+          updated_at?: string
+          user_id?: string
+          verified_at?: string | null
         }
         Relationships: []
       }
@@ -897,6 +1050,16 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      log_audit_event: {
+        Args: {
+          p_action: string
+          p_details?: Json
+          p_resource_id?: string
+          p_resource_type: string
+          p_user_id: string
+        }
+        Returns: string
       }
     }
     Enums: {
