@@ -50,6 +50,45 @@ export type Database = {
         }
         Relationships: []
       }
+      batch_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          failed_forms: number
+          id: string
+          job_name: string
+          processed_forms: number
+          results: Json | null
+          status: string
+          total_forms: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          failed_forms?: number
+          id?: string
+          job_name: string
+          processed_forms?: number
+          results?: Json | null
+          status?: string
+          total_forms: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          failed_forms?: number
+          id?: string
+          job_name?: string
+          processed_forms?: number
+          results?: Json | null
+          status?: string
+          total_forms?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           created_at: string
@@ -138,6 +177,33 @@ export type Database = {
           secret_key?: string | null
           updated_at?: string
           url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      extracted_data: {
+        Row: {
+          created_at: string
+          extracted_fields: Json
+          id: string
+          source_path: string | null
+          source_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          extracted_fields: Json
+          id?: string
+          source_path?: string | null
+          source_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          extracted_fields?: Json
+          id?: string
+          source_path?: string | null
+          source_type?: string
           user_id?: string
         }
         Relationships: []
@@ -270,6 +336,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "form_fields_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      form_recommendations: {
+        Row: {
+          created_at: string
+          form_id: string
+          id: string
+          recommended_forms: Json
+          similarity_score: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          form_id: string
+          id?: string
+          recommended_forms: Json
+          similarity_score: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          form_id?: string
+          id?: string
+          recommended_forms?: Json
+          similarity_score?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_recommendations_form_id_fkey"
             columns: ["form_id"]
             isOneToOne: false
             referencedRelation: "forms"
@@ -695,6 +796,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_preferences: {
+        Row: {
+          created_at: string
+          id: string
+          learning_data: Json
+          preference_data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          learning_data?: Json
+          preference_data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          learning_data?: Json
+          preference_data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -715,6 +843,44 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      voice_recordings: {
+        Row: {
+          audio_path: string
+          created_at: string
+          extracted_data: Json | null
+          form_id: string | null
+          id: string
+          transcription: string | null
+          user_id: string
+        }
+        Insert: {
+          audio_path: string
+          created_at?: string
+          extracted_data?: Json | null
+          form_id?: string | null
+          id?: string
+          transcription?: string | null
+          user_id: string
+        }
+        Update: {
+          audio_path?: string
+          created_at?: string
+          extracted_data?: Json | null
+          form_id?: string | null
+          id?: string
+          transcription?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voice_recordings_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

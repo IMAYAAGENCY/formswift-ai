@@ -15,6 +15,7 @@ import Templates from "./pages/Templates";
 import Teams from "./pages/Teams";
 import Webhooks from "./pages/Webhooks";
 import SmartForms from "./pages/SmartForms";
+import AIAutomation from "./pages/AIAutomation";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/teams" element={<Teams />} />
           <Route path="/webhooks" element={<Webhooks />} />
           <Route path="/smart-forms" element={<SmartForms />} />
+          <Route path="/ai-automation" element={<AIAutomation />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
