@@ -30,6 +30,7 @@ import CRMIntegration from "./pages/CRMIntegration";
 import ProgressiveProfiling from "./pages/ProgressiveProfiling";
 import CollaborationWorkflow from "./pages/CollaborationWorkflow";
 import UserExperience from "./pages/UserExperience";
+import AdvancedAnalytics from "./pages/AdvancedAnalytics";
 import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
 
 const queryClient = new QueryClient();
@@ -68,6 +69,7 @@ const App = () => (
           <Route path="/progressive-profiling" element={<ProgressiveProfiling />} />
           <Route path="/collaboration-workflow" element={<CollaborationWorkflow />} />
           <Route path="/user-experience" element={<UserExperience />} />
+          <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

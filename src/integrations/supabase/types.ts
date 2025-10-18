@@ -441,6 +441,42 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_dashboards: {
+        Row: {
+          created_at: string
+          dashboard_description: string | null
+          dashboard_name: string
+          id: string
+          is_default: boolean
+          layout_config: Json
+          updated_at: string
+          user_id: string
+          widget_config: Json
+        }
+        Insert: {
+          created_at?: string
+          dashboard_description?: string | null
+          dashboard_name: string
+          id?: string
+          is_default?: boolean
+          layout_config?: Json
+          updated_at?: string
+          user_id: string
+          widget_config?: Json
+        }
+        Update: {
+          created_at?: string
+          dashboard_description?: string | null
+          dashboard_name?: string
+          id?: string
+          is_default?: boolean
+          layout_config?: Json
+          updated_at?: string
+          user_id?: string
+          widget_config?: Json
+        }
+        Relationships: []
+      }
       custom_webhooks: {
         Row: {
           created_at: string
@@ -1445,6 +1481,42 @@ export type Database = {
         }
         Relationships: []
       }
+      predictive_analytics: {
+        Row: {
+          confidence_score: number | null
+          created_at: string
+          expires_at: string | null
+          form_id: string
+          id: string
+          prediction_data: Json
+          prediction_type: string
+          time_period: string
+          user_id: string
+        }
+        Insert: {
+          confidence_score?: number | null
+          created_at?: string
+          expires_at?: string | null
+          form_id: string
+          id?: string
+          prediction_data: Json
+          prediction_type: string
+          time_period: string
+          user_id: string
+        }
+        Update: {
+          confidence_score?: number | null
+          created_at?: string
+          expires_at?: string | null
+          form_id?: string
+          id?: string
+          prediction_data?: Json
+          prediction_type?: string
+          time_period?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -1526,6 +1598,33 @@ export type Database = {
         }
         Relationships: []
       }
+      realtime_metrics: {
+        Row: {
+          form_id: string
+          id: string
+          metadata: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at: string
+        }
+        Insert: {
+          form_id: string
+          id?: string
+          metadata?: Json | null
+          metric_type: string
+          metric_value: number
+          recorded_at?: string
+        }
+        Update: {
+          form_id?: string
+          id?: string
+          metadata?: Json | null
+          metric_type?: string
+          metric_value?: number
+          recorded_at?: string
+        }
+        Relationships: []
+      }
       referral_conversions: {
         Row: {
           commission_amount: number | null
@@ -1595,6 +1694,42 @@ export type Database = {
           id?: string
           resource?: string
           role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
+      sentiment_analysis: {
+        Row: {
+          analyzed_at: string
+          confidence: number
+          emotions: Json | null
+          form_id: string
+          id: string
+          key_phrases: Json | null
+          sentiment_label: string
+          sentiment_score: number
+          submission_id: string
+        }
+        Insert: {
+          analyzed_at?: string
+          confidence: number
+          emotions?: Json | null
+          form_id: string
+          id?: string
+          key_phrases?: Json | null
+          sentiment_label: string
+          sentiment_score: number
+          submission_id: string
+        }
+        Update: {
+          analyzed_at?: string
+          confidence?: number
+          emotions?: Json | null
+          form_id?: string
+          id?: string
+          key_phrases?: Json | null
+          sentiment_label?: string
+          sentiment_score?: number
+          submission_id?: string
         }
         Relationships: []
       }

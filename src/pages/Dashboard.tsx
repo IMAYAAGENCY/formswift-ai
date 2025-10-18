@@ -558,6 +558,13 @@ const Dashboard = () => {
             <Layers className="h-6 w-6" />
             <span className="text-sm font-semibold">UX Features</span>
           </Button>
+          <Button
+            onClick={() => navigate("/advanced-analytics")}
+            className="flex flex-col gap-2 h-auto py-4"
+          >
+            <BarChart3 className="h-6 w-6" />
+            <span className="text-sm font-semibold">Analytics</span>
+          </Button>
         </div>
 
         {/* Smart Search */}
