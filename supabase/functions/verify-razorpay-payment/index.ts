@@ -134,6 +134,83 @@ serve(async (req) => {
 
     console.log('Payment verified and profile updated for user:', user.id);
 
+    // Handle referral conversions and rewards
+    const { data: referrerProfile } = await supabase
+      .from('profiles')
+      .select('referred_by, referral_conversions, free_plans_earned')
+      .eq('id', user.id)
+      .single();
+
+    if (referrerProfile?.referred_by) {
+      // Find the referrer
+      const { data: referrer } = await supabase
+        .from('profiles')
+        .select('id, referral_code')
+        .eq('referral_code', referrerProfile.referred_by)
+        .single();
+
+      if (referrer) {
+        // Check for affiliate commission (10%)
+        const { data: affiliateLink } = await supabase
+          .from('affiliate_links')
+          .select('*')
+          .eq('user_id', referrer.id)
+          .eq('referral_code', referrerProfile.referred_by)
+          .single();
+
+        const commissionAmount = affiliateLink?.is_affiliate 
+          ? (amount / 100) * (affiliateLink.commission_rate / 100)
+          : 0;
+
+        // Record the conversion
+        await supabase.from('referral_conversions').insert({
+          referrer_user_id: referrer.id,
+          referred_user_id: user.id,
+          referral_code: referrerProfile.referred_by,
+          payment_id: razorpay_payment_id,
+          payment_amount: amount / 100,
+          commission_amount: commissionAmount,
+          status: 'completed',
+          credited_at: new Date().toISOString(),
+        });
+
+        // Update referrer's conversion count
+        const newConversionCount = (referrerProfile.referral_conversions || 0) + 1;
+        
+        // Check if they've reached 3 conversions for a free plan
+        const shouldAwardFreePlan = newConversionCount % 3 === 0;
+        
+        await supabase
+          .from('profiles')
+          .update({
+            referral_conversions: newConversionCount,
+            ...(shouldAwardFreePlan && {
+              free_plans_earned: (referrerProfile.free_plans_earned || 0) + 1,
+              form_limit: planConfig.forms, // Award the same plan
+              plan_type: `${planName} (Free Referral Reward)`,
+              expiry_date: new Date(Date.now() + planConfig.duration_days * 24 * 60 * 60 * 1000).toISOString(),
+            })
+          })
+          .eq('id', referrer.id);
+
+        // Update affiliate link stats if applicable
+        if (affiliateLink) {
+          await supabase
+            .from('affiliate_links')
+            .update({
+              total_conversions: (affiliateLink.total_conversions || 0) + 1,
+              total_earnings: (affiliateLink.total_earnings || 0) + commissionAmount,
+            })
+            .eq('id', affiliateLink.id);
+        }
+
+        console.log(`Referral conversion tracked for referrer ${referrer.id}`);
+        if (shouldAwardFreePlan) {
+          console.log(`Free plan awarded to referrer ${referrer.id} after 3 conversions`);
+        }
+      }
+    }
+
     // Trigger n8n webhook if configured
     const { data: webhookData } = await supabase
       .from('profiles')

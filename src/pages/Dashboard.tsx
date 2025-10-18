@@ -10,6 +10,7 @@ import { FormAssistantModal } from "@/components/FormAssistantModal";
 import { AnimatedUploadDemo } from "@/components/AnimatedUploadDemo";
 import { AnimatedUpgradeDemo } from "@/components/AnimatedUpgradeDemo";
 import { N8nWorkflowGuide } from "@/components/N8nWorkflowGuide";
+import { AffiliateSection } from "@/components/AffiliateSection";
 import { Upload, FileText, Crown, Calendar, TrendingUp, Download, Trash2, Loader2, Sparkles, Webhook, Save, Bot, Video } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,6 +33,7 @@ const Dashboard = () => {
   const [processingFormId, setProcessingFormId] = useState<string | null>(null);
   const [forms, setForms] = useState<Form[]>([]);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [userId, setUserId] = useState<string>("");
   const [userData, setUserData] = useState<{
     name: string;
     plan: string;
@@ -39,6 +41,9 @@ const Dashboard = () => {
     formsLimit: number;
     expiryDate: string | null;
     n8nWebhookUrl: string | null;
+    referralCode: string | null;
+    referralConversions: number;
+    freePlansEarned: number;
   } | null>(null);
   const [webhookUrl, setWebhookUrl] = useState("");
   const [isSavingWebhook, setIsSavingWebhook] = useState(false);
@@ -56,6 +61,7 @@ const Dashboard = () => {
         return;
       }
 
+      setUserId(session.user.id);
       await fetchUserData(session.user.id);
     };
 
@@ -108,6 +114,9 @@ const Dashboard = () => {
       formsLimit: profile.form_limit,
       expiryDate: profile.expiry_date,
       n8nWebhookUrl: profile.n8n_webhook_url,
+      referralCode: profile.referral_code,
+      referralConversions: profile.referral_conversions || 0,
+      freePlansEarned: profile.free_plans_earned || 0,
     });
     
     setWebhookUrl(profile.n8n_webhook_url || "");
@@ -643,6 +652,16 @@ const Dashboard = () => {
         {/* n8n Workflow Setup Guide */}
         {userData.n8nWebhookUrl && (
           <N8nWorkflowGuide />
+        )}
+
+        {/* Affiliate & Referral Section */}
+        {userData.referralCode && userId && (
+          <AffiliateSection
+            userId={userId}
+            referralCode={userData.referralCode}
+            referralConversions={userData.referralConversions}
+            freePlansEarned={userData.freePlansEarned}
+          />
         )}
 
         {/* Recent Forms Section */}

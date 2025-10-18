@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_links: {
+        Row: {
+          commission_rate: number
+          created_at: string
+          id: string
+          is_affiliate: boolean
+          referral_code: string
+          total_clicks: number
+          total_conversions: number
+          total_earnings: number
+          user_id: string
+        }
+        Insert: {
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          is_affiliate?: boolean
+          referral_code: string
+          total_clicks?: number
+          total_conversions?: number
+          total_earnings?: number
+          user_id: string
+        }
+        Update: {
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          is_affiliate?: boolean
+          referral_code?: string
+          total_clicks?: number
+          total_conversions?: number
+          total_earnings?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       forms: {
         Row: {
           ai_filled_link: string | null
@@ -97,34 +133,85 @@ export type Database = {
           created_at: string
           expiry_date: string | null
           form_limit: number
+          free_plans_earned: number
           id: string
           n8n_webhook_url: string | null
           name: string
           phone: string | null
           plan_type: string
+          referral_code: string | null
+          referral_conversions: number
+          referred_by: string | null
           used_forms: number
         }
         Insert: {
           created_at?: string
           expiry_date?: string | null
           form_limit?: number
+          free_plans_earned?: number
           id: string
           n8n_webhook_url?: string | null
           name: string
           phone?: string | null
           plan_type?: string
+          referral_code?: string | null
+          referral_conversions?: number
+          referred_by?: string | null
           used_forms?: number
         }
         Update: {
           created_at?: string
           expiry_date?: string | null
           form_limit?: number
+          free_plans_earned?: number
           id?: string
           n8n_webhook_url?: string | null
           name?: string
           phone?: string | null
           plan_type?: string
+          referral_code?: string | null
+          referral_conversions?: number
+          referred_by?: string | null
           used_forms?: number
+        }
+        Relationships: []
+      }
+      referral_conversions: {
+        Row: {
+          commission_amount: number | null
+          converted_at: string
+          credited_at: string | null
+          id: string
+          payment_amount: number | null
+          payment_id: string | null
+          referral_code: string
+          referred_user_id: string
+          referrer_user_id: string
+          status: string
+        }
+        Insert: {
+          commission_amount?: number | null
+          converted_at?: string
+          credited_at?: string | null
+          id?: string
+          payment_amount?: number | null
+          payment_id?: string | null
+          referral_code: string
+          referred_user_id: string
+          referrer_user_id: string
+          status?: string
+        }
+        Update: {
+          commission_amount?: number | null
+          converted_at?: string
+          credited_at?: string | null
+          id?: string
+          payment_amount?: number | null
+          payment_id?: string | null
+          referral_code?: string
+          referred_user_id?: string
+          referrer_user_id?: string
+          status?: string
         }
         Relationships: []
       }
@@ -154,6 +241,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_referral_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, ArrowLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
@@ -27,8 +27,10 @@ const loginSchema = z.object({
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const referralCode = searchParams.get('ref');
 
   useEffect(() => {
     // Check if user is already logged in
@@ -56,7 +58,7 @@ const Auth = () => {
     try {
       const validated = signupSchema.parse(data);
       
-      const { error } = await supabase.auth.signUp({
+      const { error, data: signupData } = await supabase.auth.signUp({
         email: validated.email,
         password: validated.password,
         options: {
@@ -67,6 +69,14 @@ const Auth = () => {
           },
         },
       });
+
+      // If signup successful and there's a referral code, update the profile
+      if (!error && signupData.user && referralCode) {
+        await supabase
+          .from('profiles')
+          .update({ referred_by: referralCode })
+          .eq('id', signupData.user.id);
+      }
 
       if (error) {
         toast({
