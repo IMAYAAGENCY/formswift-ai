@@ -513,6 +513,54 @@ export type Database = {
         }
         Relationships: []
       }
+      embedded_forms: {
+        Row: {
+          allowed_domains: Json | null
+          created_at: string
+          custom_css: string | null
+          custom_js: string | null
+          embed_code: string
+          form_id: string
+          id: string
+          is_active: boolean
+          show_branding: boolean
+          submissions_count: number
+          updated_at: string
+          user_id: string
+          views_count: number
+        }
+        Insert: {
+          allowed_domains?: Json | null
+          created_at?: string
+          custom_css?: string | null
+          custom_js?: string | null
+          embed_code: string
+          form_id: string
+          id?: string
+          is_active?: boolean
+          show_branding?: boolean
+          submissions_count?: number
+          updated_at?: string
+          user_id: string
+          views_count?: number
+        }
+        Update: {
+          allowed_domains?: Json | null
+          created_at?: string
+          custom_css?: string | null
+          custom_js?: string | null
+          embed_code?: string
+          form_id?: string
+          id?: string
+          is_active?: boolean
+          show_branding?: boolean
+          submissions_count?: number
+          updated_at?: string
+          user_id?: string
+          views_count?: number
+        }
+        Relationships: []
+      }
       encryption_keys: {
         Row: {
           created_at: string
@@ -823,6 +871,45 @@ export type Database = {
           },
         ]
       }
+      form_pages: {
+        Row: {
+          conditions: Json | null
+          created_at: string
+          fields: Json
+          form_id: string
+          id: string
+          page_description: string | null
+          page_number: number
+          page_title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conditions?: Json | null
+          created_at?: string
+          fields?: Json
+          form_id: string
+          id?: string
+          page_description?: string | null
+          page_number: number
+          page_title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conditions?: Json | null
+          created_at?: string
+          fields?: Json
+          form_id?: string
+          id?: string
+          page_description?: string | null
+          page_number?: number
+          page_title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       form_payments: {
         Row: {
           amount: number
@@ -859,6 +946,42 @@ export type Database = {
           payment_provider?: string
           status?: string
           submission_id?: string | null
+        }
+        Relationships: []
+      }
+      form_progress: {
+        Row: {
+          created_at: string
+          current_page: number
+          expires_at: string | null
+          form_data: Json
+          form_id: string
+          id: string
+          is_completed: boolean
+          last_saved_at: string
+          user_identifier: string
+        }
+        Insert: {
+          created_at?: string
+          current_page?: number
+          expires_at?: string | null
+          form_data?: Json
+          form_id: string
+          id?: string
+          is_completed?: boolean
+          last_saved_at?: string
+          user_identifier: string
+        }
+        Update: {
+          created_at?: string
+          current_page?: number
+          expires_at?: string | null
+          form_data?: Json
+          form_id?: string
+          id?: string
+          is_completed?: boolean
+          last_saved_at?: string
+          user_identifier?: string
         }
         Relationships: []
       }
@@ -1211,6 +1334,45 @@ export type Database = {
           id?: string
           timestamp?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      offline_submissions: {
+        Row: {
+          client_timestamp: string
+          created_at: string
+          device_info: Json | null
+          form_id: string
+          id: string
+          last_sync_attempt: string | null
+          submission_data: Json
+          sync_attempts: number
+          sync_status: string
+          synced_at: string | null
+        }
+        Insert: {
+          client_timestamp: string
+          created_at?: string
+          device_info?: Json | null
+          form_id: string
+          id?: string
+          last_sync_attempt?: string | null
+          submission_data: Json
+          sync_attempts?: number
+          sync_status?: string
+          synced_at?: string | null
+        }
+        Update: {
+          client_timestamp?: string
+          created_at?: string
+          device_info?: Json | null
+          form_id?: string
+          id?: string
+          last_sync_attempt?: string | null
+          submission_data?: Json
+          sync_attempts?: number
+          sync_status?: string
+          synced_at?: string | null
         }
         Relationships: []
       }

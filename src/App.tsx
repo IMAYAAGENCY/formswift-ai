@@ -29,6 +29,7 @@ import EmailIntegration from "./pages/EmailIntegration";
 import CRMIntegration from "./pages/CRMIntegration";
 import ProgressiveProfiling from "./pages/ProgressiveProfiling";
 import CollaborationWorkflow from "./pages/CollaborationWorkflow";
+import UserExperience from "./pages/UserExperience";
 import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
 
 const queryClient = new QueryClient();
@@ -66,6 +67,7 @@ const App = () => (
           <Route path="/crm-integration" element={<CRMIntegration />} />
           <Route path="/progressive-profiling" element={<ProgressiveProfiling />} />
           <Route path="/collaboration-workflow" element={<CollaborationWorkflow />} />
+          <Route path="/user-experience" element={<UserExperience />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

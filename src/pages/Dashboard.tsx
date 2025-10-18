@@ -551,6 +551,13 @@ const Dashboard = () => {
             <Workflow className="h-6 w-6" />
             <span className="text-sm font-semibold">Workflow</span>
           </Button>
+          <Button
+            onClick={() => navigate("/user-experience")}
+            className="flex flex-col gap-2 h-auto py-4"
+          >
+            <Layers className="h-6 w-6" />
+            <span className="text-sm font-semibold">UX Features</span>
+          </Button>
         </div>
 
         {/* Smart Search */}
