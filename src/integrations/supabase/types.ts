@@ -230,6 +230,129 @@ export type Database = {
           },
         ]
       }
+      form_fields: {
+        Row: {
+          conditional_logic: Json | null
+          created_at: string
+          field_label: string
+          field_name: string
+          field_order: number
+          field_type: string
+          form_id: string
+          id: string
+          is_required: boolean
+          updated_at: string
+        }
+        Insert: {
+          conditional_logic?: Json | null
+          created_at?: string
+          field_label: string
+          field_name: string
+          field_order: number
+          field_type: string
+          form_id: string
+          id?: string
+          is_required?: boolean
+          updated_at?: string
+        }
+        Update: {
+          conditional_logic?: Json | null
+          created_at?: string
+          field_label?: string
+          field_name?: string
+          field_order?: number
+          field_type?: string
+          form_id?: string
+          id?: string
+          is_required?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_fields_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      form_schedules: {
+        Row: {
+          created_at: string
+          form_id: string
+          id: string
+          scheduled_at: string
+          status: string
+          submitted_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          form_id: string
+          id?: string
+          scheduled_at: string
+          status?: string
+          submitted_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          form_id?: string
+          id?: string
+          scheduled_at?: string
+          status?: string
+          submitted_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_schedules_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      form_signatures: {
+        Row: {
+          form_id: string
+          id: string
+          ip_address: string | null
+          signature_data: string
+          signed_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          form_id: string
+          id?: string
+          ip_address?: string | null
+          signature_data: string
+          signed_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          form_id?: string
+          id?: string
+          ip_address?: string | null
+          signature_data?: string
+          signed_at?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_signatures_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       form_templates: {
         Row: {
           category: string
@@ -274,6 +397,79 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      form_translations: {
+        Row: {
+          created_at: string
+          form_id: string
+          id: string
+          language_code: string
+          translated_data: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          form_id: string
+          id?: string
+          language_code: string
+          translated_data: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          form_id?: string
+          id?: string
+          language_code?: string
+          translated_data?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_translations_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      form_versions: {
+        Row: {
+          change_description: string | null
+          changed_by: string
+          created_at: string
+          form_data: Json
+          form_id: string
+          id: string
+          version_number: number
+        }
+        Insert: {
+          change_description?: string | null
+          changed_by: string
+          created_at?: string
+          form_data: Json
+          form_id: string
+          id?: string
+          version_number: number
+        }
+        Update: {
+          change_description?: string | null
+          changed_by?: string
+          created_at?: string
+          form_data?: Json
+          form_id?: string
+          id?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_versions_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       forms: {
         Row: {

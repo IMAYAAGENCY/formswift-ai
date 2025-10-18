@@ -379,7 +379,7 @@ const Dashboard = () => {
       
       <div className="container mx-auto px-4 pt-24 pb-12">
         {/* Quick Access Features */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => navigate("/ai-assistant")}>
             <Bot className="h-6 w-6" />
             <span className="text-sm">AI Assistant</span>
@@ -399,6 +399,14 @@ const Dashboard = () => {
           <Button variant="outline" className="h-24 flex-col gap-2" onClick={() => navigate("/webhooks")}>
             <Zap className="h-6 w-6" />
             <span className="text-sm">Webhooks</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="h-24 flex-col gap-2 bg-gradient-to-br from-primary/10 to-accent/10 border-primary/30 hover:border-primary/50"
+            onClick={() => navigate("/smart-forms")}
+          >
+            <Sparkles className="h-6 w-6" />
+            <span className="text-sm font-semibold">Smart Forms</span>
           </Button>
         </div>
 
