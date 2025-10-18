@@ -77,7 +77,7 @@ serve(async (req) => {
     // Download the form file from storage
     const { data: fileData, error: fileError } = await supabase.storage
       .from('uploaded-forms')
-      .download(form.file_link.split('/uploaded-forms/')[1]);
+      .download(form.file_link);
 
     if (fileError || !fileData) {
       return new Response(
