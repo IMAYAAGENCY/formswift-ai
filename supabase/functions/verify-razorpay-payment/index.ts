@@ -75,7 +75,7 @@ serve(async (req) => {
     // Plan configurations for updating user profile
     const PLAN_CONFIGS: Record<string, { forms: number; duration_days: number }> = {
       'Per Form': { forms: 1, duration_days: 0 },
-      'Daily': { forms: 10, duration_days: 1 },
+      'Per Day Plan': { forms: 10, duration_days: 1 },
       'Weekly': { forms: 100, duration_days: 7 },
       'Monthly': { forms: 400, duration_days: 30 },
       'Quarterly': { forms: 1500, duration_days: 90 },

@@ -48,7 +48,7 @@ const plans: Plan[] = [
     popular: false,
   },
   {
-    name: "Daily",
+    name: "Per Day Plan",
     price: "₹79",
     period: "per day",
     description: "Great for daily tasks",

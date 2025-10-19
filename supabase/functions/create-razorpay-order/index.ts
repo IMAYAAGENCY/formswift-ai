@@ -10,7 +10,7 @@ const corsHeaders = {
 // Plan configurations
 const PLAN_CONFIGS: Record<string, { amount: number; forms: number; duration_days: number }> = {
   'Per Form': { amount: 2000, forms: 1, duration_days: 0 }, // ₹20 in paise
-  'Daily': { amount: 7900, forms: 10, duration_days: 1 },
+  'Per Day Plan': { amount: 7900, forms: 10, duration_days: 1 },
   'Weekly': { amount: 29900, forms: 100, duration_days: 7 },
   'Monthly': { amount: 69900, forms: 400, duration_days: 30 },
   'Quarterly': { amount: 199900, forms: 1500, duration_days: 90 },

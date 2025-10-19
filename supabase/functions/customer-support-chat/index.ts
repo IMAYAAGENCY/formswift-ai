@@ -55,7 +55,7 @@ serve(async (req) => {
 Key features you can help with:
 - Form upload (PDF, JPG, PNG, DOC, DOCX up to 20MB)
 - AI form processing and analysis
-- Subscription plans (Free: 2 forms, Daily, Weekly, Monthly, Quarterly, Yearly)
+- Subscription plans (Free: 2 forms, Per Day Plan, Weekly, Monthly, Quarterly, Yearly)
 - Payment processing with Razorpay
 - n8n workflow integration
 - Account and profile management
