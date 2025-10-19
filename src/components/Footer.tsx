@@ -1,5 +1,6 @@
 import { FileText } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AffiliateBanners } from "./AffiliateBanners";
 
 export const Footer = () => {
   return (
@@ -81,8 +82,14 @@ export const Footer = () => {
             </ul>
           </div>
         </div>
+
+        {/* Affiliate Banners Section */}
+        <div className="mt-12 pt-8 border-t border-border">
+          <h3 className="text-sm font-semibold mb-4 text-center">Our Partners</h3>
+          <AffiliateBanners location="footer" />
+        </div>
         
-        <div className="mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+        <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
           <p>© 2025 AI AUTO FORM. All rights reserved. Made in India with ❤️</p>
         </div>
       </div>

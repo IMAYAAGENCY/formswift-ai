@@ -14,6 +14,89 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_banner_clicks: {
+        Row: {
+          banner_id: string
+          clicked_at: string
+          id: string
+          ip_address: unknown | null
+          page_url: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          banner_id: string
+          clicked_at?: string
+          id?: string
+          ip_address?: unknown | null
+          page_url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          banner_id?: string
+          clicked_at?: string
+          id?: string
+          ip_address?: unknown | null
+          page_url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_banner_clicks_banner_id_fkey"
+            columns: ["banner_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_banners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_banners: {
+        Row: {
+          affiliate_link: string
+          banner_url: string
+          created_at: string
+          display_location: string
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          page_category: string | null
+          platform: string
+          total_clicks: number
+          updated_at: string
+        }
+        Insert: {
+          affiliate_link: string
+          banner_url: string
+          created_at?: string
+          display_location?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          page_category?: string | null
+          platform: string
+          total_clicks?: number
+          updated_at?: string
+        }
+        Update: {
+          affiliate_link?: string
+          banner_url?: string
+          created_at?: string
+          display_location?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          page_category?: string | null
+          platform?: string
+          total_clicks?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       affiliate_links: {
         Row: {
           commission_rate: number
