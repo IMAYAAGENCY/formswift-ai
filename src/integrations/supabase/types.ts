@@ -54,8 +54,12 @@ export type Database = {
       }
       affiliate_banners: {
         Row: {
+          active_from: string | null
+          active_until: string | null
           affiliate_link: string
+          auto_rotate: boolean | null
           banner_url: string
+          click_through_rate: number | null
           created_at: string
           display_location: string
           display_order: number
@@ -64,12 +68,18 @@ export type Database = {
           name: string
           page_category: string | null
           platform: string
+          rotation_interval: number | null
           total_clicks: number
+          total_views: number | null
           updated_at: string
         }
         Insert: {
+          active_from?: string | null
+          active_until?: string | null
           affiliate_link: string
+          auto_rotate?: boolean | null
           banner_url: string
+          click_through_rate?: number | null
           created_at?: string
           display_location?: string
           display_order?: number
@@ -78,12 +88,18 @@ export type Database = {
           name: string
           page_category?: string | null
           platform: string
+          rotation_interval?: number | null
           total_clicks?: number
+          total_views?: number | null
           updated_at?: string
         }
         Update: {
+          active_from?: string | null
+          active_until?: string | null
           affiliate_link?: string
+          auto_rotate?: boolean | null
           banner_url?: string
+          click_through_rate?: number | null
           created_at?: string
           display_location?: string
           display_order?: number
@@ -92,7 +108,9 @@ export type Database = {
           name?: string
           page_category?: string | null
           platform?: string
+          rotation_interval?: number | null
           total_clicks?: number
+          total_views?: number | null
           updated_at?: string
         }
         Relationships: []
@@ -2250,6 +2268,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      auto_pause_low_performers: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       generate_referral_code: {
         Args: Record<PropertyKey, never>
         Returns: string

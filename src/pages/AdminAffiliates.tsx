@@ -23,6 +23,12 @@ interface AffiliateBanner {
   is_active: boolean;
   display_order: number;
   total_clicks: number;
+  total_views: number;
+  click_through_rate: number;
+  auto_rotate: boolean;
+  rotation_interval: number;
+  active_from: string;
+  active_until: string | null;
   created_at: string;
 }
 
@@ -41,6 +47,10 @@ export default function AdminAffiliates() {
     page_category: "",
     is_active: true,
     display_order: 0,
+    auto_rotate: true,
+    rotation_interval: 5000,
+    active_from: new Date().toISOString().slice(0, 16),
+    active_until: "",
   });
 
   useEffect(() => {
@@ -69,6 +79,7 @@ export default function AdminAffiliates() {
     const dataToSave = {
       ...formData,
       page_category: formData.page_category || null,
+      active_until: formData.active_until || null,
     };
 
     if (editingBanner) {
@@ -112,6 +123,10 @@ export default function AdminAffiliates() {
       page_category: banner.page_category || "",
       is_active: banner.is_active,
       display_order: banner.display_order,
+      auto_rotate: banner.auto_rotate,
+      rotation_interval: banner.rotation_interval,
+      active_from: banner.active_from.slice(0, 16),
+      active_until: banner.active_until?.slice(0, 16) || "",
     });
     setIsDialogOpen(true);
   };
@@ -158,6 +173,10 @@ export default function AdminAffiliates() {
       page_category: "",
       is_active: true,
       display_order: 0,
+      auto_rotate: true,
+      rotation_interval: 5000,
+      active_from: new Date().toISOString().slice(0, 16),
+      active_until: "",
     });
     setEditingBanner(null);
     setIsDialogOpen(false);
@@ -292,6 +311,56 @@ export default function AdminAffiliates() {
                   <Label htmlFor="is_active">Active</Label>
                 </div>
 
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="auto_rotate"
+                    checked={formData.auto_rotate}
+                    onCheckedChange={(checked) => setFormData({ ...formData, auto_rotate: checked })}
+                  />
+                  <Label htmlFor="auto_rotate">Auto-Rotate Banners</Label>
+                </div>
+
+                {formData.auto_rotate && (
+                  <div>
+                    <Label htmlFor="rotation_interval">Rotation Interval (ms)</Label>
+                    <Input
+                      id="rotation_interval"
+                      type="number"
+                      value={formData.rotation_interval}
+                      onChange={(e) => setFormData({ ...formData, rotation_interval: parseInt(e.target.value) })}
+                      min="1000"
+                      step="1000"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Time between banner rotations in milliseconds (e.g., 5000 = 5 seconds)
+                    </p>
+                  </div>
+                )}
+
+                <div>
+                  <Label htmlFor="active_from">Active From</Label>
+                  <Input
+                    id="active_from"
+                    type="datetime-local"
+                    value={formData.active_from}
+                    onChange={(e) => setFormData({ ...formData, active_from: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="active_until">Active Until (Optional)</Label>
+                  <Input
+                    id="active_until"
+                    type="datetime-local"
+                    value={formData.active_until}
+                    onChange={(e) => setFormData({ ...formData, active_until: e.target.value })}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Leave empty for indefinite display
+                  </p>
+                </div>
+
                 <div className="flex justify-end space-x-2">
                   <Button type="button" variant="outline" onClick={resetForm}>
                     Cancel
@@ -324,8 +393,9 @@ export default function AdminAffiliates() {
                     <TableHead>Name</TableHead>
                     <TableHead>Platform</TableHead>
                     <TableHead>Location</TableHead>
-                    <TableHead>Page</TableHead>
+                    <TableHead>Views</TableHead>
                     <TableHead>Clicks</TableHead>
+                    <TableHead>CTR</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
@@ -336,13 +406,14 @@ export default function AdminAffiliates() {
                       <TableCell className="font-medium">{banner.name}</TableCell>
                       <TableCell>{banner.platform}</TableCell>
                       <TableCell className="capitalize">{banner.display_location}</TableCell>
-                      <TableCell>{banner.page_category || "Global"}</TableCell>
+                      <TableCell>{banner.total_views}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <BarChart3 className="h-4 w-4 text-muted-foreground" />
                           {banner.total_clicks}
                         </div>
                       </TableCell>
+                      <TableCell>{banner.click_through_rate.toFixed(2)}%</TableCell>
                       <TableCell>
                         <Button
                           variant="ghost"
