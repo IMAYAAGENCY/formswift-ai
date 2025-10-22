@@ -26,6 +26,7 @@ interface ApiKey {
   id: string;
   key_name: string;
   api_key: string;
+  key_prefix?: string;
   created_at: string;
   last_used_at: string | null;
   expires_at: string | null;
@@ -85,6 +86,60 @@ export default function Webhooks() {
     }
   };
 
+  // Validate webhook URL to prevent SSRF attacks
+  const isValidWebhookUrl = (url: string): boolean => {
+    try {
+      const parsed = new URL(url);
+      
+      // Only allow HTTPS (or HTTP for localhost in development)
+      const isSecure = parsed.protocol === 'https:';
+      const isLocalDev = parsed.protocol === 'http:' && 
+        (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1');
+      
+      if (!isSecure && !isLocalDev) {
+        toast({
+          title: "Invalid URL",
+          description: "Webhook URL must use HTTPS",
+          variant: "destructive",
+        });
+        return false;
+      }
+      
+      // Block internal/private IP ranges to prevent SSRF
+      const hostname = parsed.hostname;
+      const blockedPatterns = [
+        /^localhost$/i,
+        /^127\./,
+        /^10\./,
+        /^172\.(1[6-9]|2[0-9]|3[0-1])\./,
+        /^192\.168\./,
+        /^169\.254\./,
+        /^0\./,
+        /^::1$/,
+        /^fe80:/i,
+        /^fc00:/i,
+      ];
+      
+      if (!isLocalDev && blockedPatterns.some(pattern => pattern.test(hostname))) {
+        toast({
+          title: "Invalid URL",
+          description: "Webhook URL cannot point to internal/private networks",
+          variant: "destructive",
+        });
+        return false;
+      }
+      
+      return true;
+    } catch {
+      toast({
+        title: "Invalid URL",
+        description: "Invalid webhook URL format",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   const createWebhook = async () => {
     if (!newWebhook.name || !newWebhook.url) {
       toast({
@@ -92,6 +147,11 @@ export default function Webhooks() {
         description: "Please fill in all fields",
         variant: "destructive",
       });
+      return;
+    }
+
+    // Validate webhook URL
+    if (!isValidWebhookUrl(newWebhook.url)) {
       return;
     }
 
@@ -124,6 +184,15 @@ export default function Webhooks() {
     }
   };
 
+  // Hash API key for secure storage
+  const hashApiKey = async (key: string): Promise<string> => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(key);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  };
+
   const createApiKey = async () => {
     if (!newApiKey.name) {
       toast({
@@ -139,21 +208,30 @@ export default function Webhooks() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
+      // Generate API key
       const apiKey = `fsk_${crypto.randomUUID().replace(/-/g, '')}`;
+      
+      // Hash the key before storing
+      const hashedKey = await hashApiKey(apiKey);
+      const keyPrefix = apiKey.substring(0, 12);
 
       const { error } = await supabase.from("api_keys").insert({
         user_id: user.id,
         key_name: newApiKey.name,
-        api_key: apiKey,
+        api_key: hashedKey,
+        key_prefix: keyPrefix,
         permissions: newApiKey.permissions,
       });
 
       if (error) throw error;
 
+      // Copy to clipboard for user convenience
+      await navigator.clipboard.writeText(apiKey);
+
       toast({ 
-        title: "Success", 
-        description: "API key created. Make sure to copy it now, you won't be able to see it again!",
-        duration: 10000,
+        title: "API Key Created", 
+        description: `Key copied to clipboard: ${apiKey}. Save it now - it won't be shown again!`,
+        duration: 15000,
       });
       setNewApiKey({ name: "", permissions: { read: true, write: false } });
       fetchApiKeys();
@@ -434,7 +512,7 @@ export default function Webhooks() {
                       <div>
                         <CardTitle className="text-lg">{apiKey.key_name}</CardTitle>
                         <CardDescription className="mt-1 font-mono text-xs">
-                          {apiKey.api_key.substring(0, 20)}...
+                          {apiKey.key_prefix || apiKey.api_key.substring(0, 12)}...
                         </CardDescription>
                       </div>
                       <div className="flex items-center gap-2">

@@ -19,7 +19,7 @@ export type Database = {
           banner_id: string
           clicked_at: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           page_url: string | null
           user_agent: string | null
           user_id: string | null
@@ -28,7 +28,7 @@ export type Database = {
           banner_id: string
           clicked_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           page_url?: string | null
           user_agent?: string | null
           user_id?: string | null
@@ -37,7 +37,7 @@ export type Database = {
           banner_id?: string
           clicked_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           page_url?: string | null
           user_agent?: string | null
           user_id?: string | null
@@ -159,6 +159,7 @@ export type Database = {
           id: string
           is_active: boolean
           key_name: string
+          key_prefix: string | null
           last_used_at: string | null
           permissions: Json
           user_id: string
@@ -170,6 +171,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           key_name: string
+          key_prefix?: string | null
           last_used_at?: string | null
           permissions?: Json
           user_id: string
@@ -181,6 +183,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           key_name?: string
+          key_prefix?: string | null
           last_used_at?: string | null
           permissions?: Json
           user_id?: string
@@ -306,7 +309,7 @@ export type Database = {
           created_at: string
           details: Json | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           resource_id: string | null
           resource_type: string
           user_agent: string | null
@@ -317,7 +320,7 @@ export type Database = {
           created_at?: string
           details?: Json | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           resource_id?: string | null
           resource_type: string
           user_agent?: string | null
@@ -328,7 +331,7 @@ export type Database = {
           created_at?: string
           details?: Json | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           resource_id?: string | null
           resource_type?: string
           user_agent?: string | null
@@ -2268,14 +2271,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      auto_pause_low_performers: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      generate_referral_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      auto_pause_low_performers: { Args: never; Returns: undefined }
+      generate_referral_code: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

@@ -14,6 +14,7 @@ interface ApiKey {
   id: string;
   key_name: string;
   api_key: string;
+  key_prefix?: string;
   is_active: boolean;
   created_at: string;
   last_used_at: string | null;
@@ -92,6 +93,15 @@ export default function APIMarketplace() {
     return 'sk_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   };
 
+  // Hash API key for secure storage
+  const hashApiKey = async (key: string): Promise<string> => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(key);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  };
+
   const handleCreateKey = async () => {
     if (!newKeyName.trim()) {
       toast({
@@ -108,21 +118,28 @@ export default function APIMarketplace() {
       if (!user) return;
 
       const apiKey = generateApiKey();
+      const hashedKey = await hashApiKey(apiKey);
+      const keyPrefix = apiKey.substring(0, 12);
 
       const { error } = await supabase.from("api_keys").insert([
         {
           user_id: user.id,
           key_name: newKeyName,
-          api_key: apiKey,
+          api_key: hashedKey,
+          key_prefix: keyPrefix,
           is_active: true,
         },
       ]);
 
       if (error) throw error;
 
+      // Copy to clipboard automatically
+      await copyToClipboard(apiKey);
+
       toast({
-        title: "Success",
-        description: "API key created successfully",
+        title: "API Key Created",
+        description: `Key copied to clipboard: ${apiKey}. Save it now - it won't be shown again!`,
+        duration: 15000,
       });
 
       setNewKeyName("");
@@ -281,7 +298,7 @@ export default function APIMarketplace() {
                             </Badge>
                           </div>
                           <code className="text-sm bg-muted px-2 py-1 rounded">
-                            {key.api_key}
+                            {key.key_prefix || key.api_key.substring(0, 12)}...
                           </code>
                           <p className="text-xs text-muted-foreground mt-2">
                             Created: {new Date(key.created_at).toLocaleDateString()}
