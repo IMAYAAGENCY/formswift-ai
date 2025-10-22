@@ -28,7 +28,7 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.customer-support-chat]
-verify_jwt = false
+verify_jwt = true
 
 [functions.form-assistant]
 verify_jwt = true

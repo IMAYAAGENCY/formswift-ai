@@ -23,6 +23,18 @@ serve(async (req) => {
       }
     );
 
+    // Verify user authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      console.error('Authentication failed:', authError);
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized. Please log in to use the chat.' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Authenticated user:', user.id);
+
     const { messages } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
