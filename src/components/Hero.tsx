@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/hero-image-optimized.webp";
+import heroImage1200 from "@/assets/hero-1200.webp";
+import heroImage800 from "@/assets/hero-800.webp";
+import heroImage640 from "@/assets/hero-640.webp";
 import heroImageFallback from "@/assets/hero-image.jpg";
 
 export const Hero = () => {
@@ -63,7 +65,11 @@ export const Hero = () => {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-20 blur-3xl rounded-3xl" />
             <picture>
-              <source srcSet={heroImage} type="image/webp" />
+              <source 
+                srcSet={`${heroImage640} 640w, ${heroImage800} 800w, ${heroImage1200} 1200w`}
+                sizes="(max-width: 640px) 640px, (max-width: 1024px) 800px, 1200px"
+                type="image/webp" 
+              />
               <img
                 src={heroImageFallback}
                 alt="AI Form Processing"
