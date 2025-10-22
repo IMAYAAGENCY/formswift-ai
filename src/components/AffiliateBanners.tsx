@@ -66,25 +66,42 @@ export function AffiliateBanners({ location = "footer", className = "" }: Affili
   };
 
   const trackClick = async (bannerId: string) => {
-    await supabase.from("affiliate_banner_clicks").insert([
-      {
-        banner_id: bannerId,
-        page_url: window.location.href,
-        user_agent: navigator.userAgent,
-      },
-    ]);
+    try {
+      // Get client IP (best effort - will be null in browser context)
+      // The database trigger will handle rate limiting
+      const { error } = await supabase.from("affiliate_banner_clicks").insert([
+        {
+          banner_id: bannerId,
+          page_url: window.location.href,
+          user_agent: navigator.userAgent,
+          ip_address: null, // Will be set by database if available
+        },
+      ]);
 
-    const { data: banner } = await supabase
-      .from("affiliate_banners")
-      .select("total_clicks")
-      .eq("id", bannerId)
-      .single();
+      if (error) {
+        // Handle rate limit errors gracefully
+        if (error.message?.includes('Rate limit exceeded')) {
+          console.warn('Click tracking rate limit reached');
+          return;
+        }
+        throw error;
+      }
 
-    if (banner) {
-      await supabase
+      // Update click counter
+      const { data: banner } = await supabase
         .from("affiliate_banners")
-        .update({ total_clicks: banner.total_clicks + 1 })
-        .eq("id", bannerId);
+        .select("total_clicks")
+        .eq("id", bannerId)
+        .single();
+
+      if (banner) {
+        await supabase
+          .from("affiliate_banners")
+          .update({ total_clicks: banner.total_clicks + 1 })
+          .eq("id", bannerId);
+      }
+    } catch (error) {
+      console.error('Failed to track click:', error);
     }
   };
 
