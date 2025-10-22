@@ -1,6 +1,28 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+// Decrypt payment credentials
+const decryptCredential = async (encryptedText: string): Promise<string> => {
+  const encryptionKey = Deno.env.get('PAYMENT_ENCRYPTION_KEY') || '';
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(encryptionKey.padEnd(32, '0')),
+    { name: 'AES-GCM' },
+    false,
+    ['decrypt']
+  );
+  const combined = Uint8Array.from(atob(encryptedText), c => c.charCodeAt(0));
+  const iv = combined.slice(0, 12);
+  const encrypted = combined.slice(12);
+  const decrypted = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    encrypted
+  );
+  return new TextDecoder().decode(decrypted);
+};
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -46,11 +68,14 @@ serve(async (req) => {
       throw new Error('Stripe integration not configured');
     }
 
+    // Decrypt secret key
+    const secretKey = await decryptCredential(config.webhook_secret);
+
     // Create Stripe payment intent
     const stripeResponse = await fetch('https://api.stripe.com/v1/payment_intents', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${config.webhook_secret}`,
+        'Authorization': `Bearer ${secretKey}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: new URLSearchParams({

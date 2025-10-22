@@ -1,6 +1,28 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+// Decrypt payment credentials
+const decryptCredential = async (encryptedText: string): Promise<string> => {
+  const encryptionKey = Deno.env.get('PAYMENT_ENCRYPTION_KEY') || '';
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(encryptionKey.padEnd(32, '0')),
+    { name: 'AES-GCM' },
+    false,
+    ['decrypt']
+  );
+  const combined = Uint8Array.from(atob(encryptedText), c => c.charCodeAt(0));
+  const iv = combined.slice(0, 12);
+  const encrypted = combined.slice(12);
+  const decrypted = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    encrypted
+  );
+  return new TextDecoder().decode(decrypted);
+};
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -46,11 +68,15 @@ serve(async (req) => {
       throw new Error('Razorpay integration not configured');
     }
 
+    // Decrypt credentials
+    const apiKey = await decryptCredential(config.api_key_encrypted);
+    const apiSecret = await decryptCredential(config.webhook_secret);
+
     // Create Razorpay order
     const razorpayResponse = await fetch('https://api.razorpay.com/v1/orders', {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${btoa(`${config.api_key_encrypted}:${config.webhook_secret}`)}`,
+        'Authorization': `Basic ${btoa(`${apiKey}:${apiSecret}`)}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -91,7 +117,7 @@ serve(async (req) => {
         orderId: order.id,
         amount: order.amount,
         currency: order.currency,
-        keyId: config.api_key_encrypted, // Return key ID for client-side Razorpay checkout
+        keyId: apiKey, // Return decrypted key ID for client-side Razorpay checkout
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

@@ -15,6 +15,29 @@ import { supabase } from "@/integrations/supabase/client";
 import { RazorpayCheckout } from "@/components/RazorpayCheckout";
 import { RazorpaySubscription } from "@/components/RazorpaySubscription";
 
+// Encryption utilities for payment credentials
+const encryptCredential = async (text: string): Promise<string> => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode('PAYMENT_ENCRYPTION_KEY'.padEnd(32, '0')),
+    { name: 'AES-GCM' },
+    false,
+    ['encrypt']
+  );
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const encrypted = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    data
+  );
+  const combined = new Uint8Array(iv.length + encrypted.byteLength);
+  combined.set(iv);
+  combined.set(new Uint8Array(encrypted), iv.length);
+  return btoa(String.fromCharCode(...combined));
+};
+
 interface PaymentConfig {
   id?: string;
   provider: string;
@@ -91,6 +114,14 @@ const PaymentIntegration = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
+      // Encrypt credentials before storing
+      const encryptedApiKey = config.api_key_encrypted 
+        ? await encryptCredential(config.api_key_encrypted)
+        : undefined;
+      const encryptedSecret = config.webhook_secret
+        ? await encryptCredential(config.webhook_secret)
+        : undefined;
+
       const { error } = await supabase
         .from('payment_integrations')
         .upsert({
@@ -98,8 +129,8 @@ const PaymentIntegration = () => {
           provider: config.provider,
           is_active: config.is_active,
           test_mode: config.test_mode,
-          api_key_encrypted: config.api_key_encrypted,
-          webhook_secret: config.webhook_secret,
+          api_key_encrypted: encryptedApiKey,
+          webhook_secret: encryptedSecret,
           updated_at: new Date().toISOString(),
         }, {
           onConflict: 'user_id,provider'
