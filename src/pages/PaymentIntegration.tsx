@@ -13,6 +13,7 @@ import { CreditCard, DollarSign, CheckCircle2, AlertCircle, Save, Zap, Repeat } 
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { RazorpayCheckout } from "@/components/RazorpayCheckout";
+import { TestRazorpaySubscription } from "@/components/TestRazorpaySubscription";
 import { RazorpaySubscription } from "@/components/RazorpaySubscription";
 
 // Encryption utilities for payment credentials
@@ -454,45 +455,7 @@ const PaymentIntegration = () => {
 
                       <div>
                         <h4 className="font-semibold mb-3">Test Subscription</h4>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Test a subscription payment (requires a plan_id from your Razorpay dashboard)
-                        </p>
-                        <Input
-                          placeholder="Enter plan_id (e.g., plan_xxxxx)"
-                          className="mb-3"
-                          value={testPlanId}
-                          onChange={(e) => setTestPlanId(e.target.value)}
-                        />
-                        {testPlanId ? (
-                          <RazorpaySubscription
-                            planId={testPlanId}
-                            planName="Test Plan"
-                            planDescription="Test Subscription"
-                            quantity={1}
-                            onSuccess={(subscriptionId, paymentId) => {
-                              toast.success(`Subscription successful! ID: ${subscriptionId}`);
-                              loadTransactions();
-                            }}
-                            onError={(error) => {
-                              toast.error(`Subscription failed: ${error}`);
-                            }}
-                          >
-                            <Button className="w-full" variant="outline">
-                              <Repeat className="mr-2 h-4 w-4" />
-                              Test Subscription
-                            </Button>
-                          </RazorpaySubscription>
-                        ) : (
-                          <Button 
-                            className="w-full" 
-                            variant="outline" 
-                            disabled
-                            onClick={() => toast.error("Please enter a plan ID")}
-                          >
-                            <Repeat className="mr-2 h-4 w-4" />
-                            Test Subscription
-                          </Button>
-                        )}
+                        <TestRazorpaySubscription />
                       </div>
                     </div>
                   )}
