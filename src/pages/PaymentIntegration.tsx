@@ -468,6 +468,8 @@ const PaymentIntegration = () => {
                             planId={testPlanId}
                             planName="Test Plan"
                             planDescription="Test Subscription"
+                            amount={100}
+                            currency="INR"
                             quantity={1}
                             onSuccess={(subscriptionId, paymentId) => {
                               toast.success(`Subscription successful! ID: ${subscriptionId}`);
@@ -479,7 +481,7 @@ const PaymentIntegration = () => {
                           >
                             <Button className="w-full" variant="outline">
                               <Repeat className="mr-2 h-4 w-4" />
-                              Test Subscription
+                              Test Subscription (₹100)
                             </Button>
                           </RazorpaySubscription>
                         ) : (
