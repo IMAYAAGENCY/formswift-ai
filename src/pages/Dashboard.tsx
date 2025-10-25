@@ -197,35 +197,48 @@ const Dashboard = () => {
   const progressPercentage = (userData.formsUsed / userData.formsLimit) * 100;
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
-    // Validate file type
+    // Limit to 10 files max
+    if (files.length > 10) {
+      toast({
+        title: "Too many files",
+        description: "You can upload maximum 10 forms at once",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file types and sizes
     const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!validTypes.includes(file.type)) {
+    const invalidFiles = files.filter(file => !validTypes.includes(file.type));
+    const largeFiles = files.filter(file => file.size > 20 * 1024 * 1024);
+
+    if (invalidFiles.length > 0) {
       toast({
         title: "Invalid file type",
-        description: "Please upload a PDF, JPG, PNG, DOC, or DOCX file",
+        description: `${invalidFiles.length} file(s) skipped. Only PDF, JPG, PNG, DOC, DOCX allowed`,
         variant: "destructive",
       });
       return;
     }
 
-    // Validate file size (20MB max)
-    if (file.size > 20 * 1024 * 1024) {
+    if (largeFiles.length > 0) {
       toast({
-        title: "File too large",
-        description: "Maximum file size is 20MB",
+        title: "Files too large",
+        description: `${largeFiles.length} file(s) exceed 20MB limit`,
         variant: "destructive",
       });
       return;
     }
 
-    // Check if user has reached form limit
-    if (userData.formsUsed >= userData.formsLimit) {
+    // Check if user has enough space for all files
+    const remainingSpace = userData.formsLimit - userData.formsUsed;
+    if (files.length > remainingSpace) {
       toast({
-        title: "Form limit reached",
-        description: "Please upgrade your plan to upload more forms",
+        title: "Form limit exceeded",
+        description: `You can only upload ${remainingSpace} more form(s). Upgrade to upload more.`,
         variant: "destructive",
       });
       return;
@@ -238,44 +251,59 @@ const Dashboard = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      // Generate unique file name
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      const uploadedForms: Form[] = [];
+      let successCount = 0;
 
-      // Upload to storage
-      const { error: uploadError, data: uploadData } = await supabase.storage
-        .from('uploaded-forms')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
+      // Upload files one by one
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const progress = ((i + 1) / files.length) * 100;
+        setUploadProgress(progress);
 
-      if (uploadError) throw uploadError;
+        try {
+          // Generate unique file name
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${user.id}/${Date.now()}_${i}.${fileExt}`;
 
-      setUploadProgress(50);
+          // Upload to storage
+          const { error: uploadError } = await supabase.storage
+            .from('uploaded-forms')
+            .upload(fileName, file, {
+              cacheControl: '3600',
+              upsert: false
+            });
 
-      // Create form record with file path (not public URL for private bucket)
-      const { data: formData, error: formError } = await supabase
-        .from('forms')
-        .insert({
-          user_id: user.id,
-          form_name: file.name,
-          file_link: fileName,
-        })
-        .select()
-        .single();
+          if (uploadError) throw uploadError;
 
-      if (formError) throw formError;
+          // Create form record
+          const { data: formData, error: formError } = await supabase
+            .from('forms')
+            .insert({
+              user_id: user.id,
+              form_name: file.name,
+              file_link: fileName,
+            })
+            .select()
+            .single();
 
-      setUploadProgress(100);
+          if (formError) throw formError;
 
-      // Update local state
-      setForms(prev => [formData, ...prev]);
-      setUserData(prev => prev ? { ...prev, formsUsed: prev.formsUsed + 1 } : null);
+          uploadedForms.push(formData);
+          successCount++;
+        } catch (fileError) {
+          console.error(`Error uploading ${file.name}:`, fileError);
+        }
+      }
+
+      // Update local state with all uploaded forms
+      if (uploadedForms.length > 0) {
+        setForms(prev => [...uploadedForms, ...prev]);
+        setUserData(prev => prev ? { ...prev, formsUsed: prev.formsUsed + uploadedForms.length } : null);
+      }
 
       toast({
-        title: "Upload successful",
-        description: "Your form has been uploaded and is ready for processing",
+        title: "Upload complete",
+        description: `Successfully uploaded ${successCount} of ${files.length} form(s)`,
       });
 
       // Reset file input
@@ -286,7 +314,7 @@ const Dashboard = () => {
       console.error('Upload error:', error);
       toast({
         title: "Upload failed",
-        description: "We couldn't upload your file. Please check your connection and try again.",
+        description: "Some files couldn't be uploaded. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -665,6 +693,7 @@ const Dashboard = () => {
                 onChange={handleFileSelect}
                 className="hidden"
                 disabled={isUploading || userData.formsUsed >= userData.formsLimit}
+                multiple
               />
               <Button 
                 variant="hero" 
@@ -681,7 +710,7 @@ const Dashboard = () => {
                 ) : (
                   <>
                     <Upload className="mr-2 h-5 w-5" />
-                    Choose File to Upload
+                    Choose Files to Upload (Max 10)
                   </>
                 )}
               </Button>
@@ -689,7 +718,7 @@ const Dashboard = () => {
                 <Progress value={uploadProgress} className="w-full" />
               )}
               <p className="text-center text-sm text-muted-foreground">
-                Supported: PDF, JPG, PNG, DOC, DOCX (Max 20MB)
+                Supported: PDF, JPG, PNG, DOC, DOCX (Max 20MB each, up to 10 files)
               </p>
               {userData.formsUsed >= userData.formsLimit && (
                 <p className="text-center text-sm text-destructive font-medium">
