@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Loader2, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 declare global {
   interface Window {
@@ -13,6 +16,8 @@ declare global {
 
 export const TestRazorpaySubscription = () => {
   const [loading, setLoading] = useState(false);
+  const [planId, setPlanId] = useState('');
+  const [amount, setAmount] = useState('1');
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -29,6 +34,11 @@ export const TestRazorpaySubscription = () => {
   };
 
   const handleTestSubscription = async () => {
+    if (!planId.trim()) {
+      toast.error('Please enter a Plan ID');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -40,15 +50,16 @@ export const TestRazorpaySubscription = () => {
       }
 
       // 2. Create subscription via edge function
+      console.log('Creating subscription with Plan ID:', planId);
       const { data, error } = await supabase.functions.invoke(
         'razorpay-create-subscription',
         {
           body: {
-            planId: 'plan_La62j2e4ET6QzK', // Your test plan ID
-            totalCount: 3,
+            planId: planId.trim(),
+            totalCount: 12, // 12 billing cycles
             quantity: 1,
             notes: {
-              plan_name: 'Test Monthly Plan',
+              plan_name: 'Test Subscription Plan',
             },
           },
         }
@@ -56,7 +67,7 @@ export const TestRazorpaySubscription = () => {
 
       if (error) {
         console.error('Subscription creation error:', error);
-        toast.error('Failed to create subscription: ' + error.message);
+        toast.error('Failed to create subscription: ' + (error.message || 'Unknown error'));
         return;
       }
 
@@ -72,18 +83,18 @@ export const TestRazorpaySubscription = () => {
         key: data.keyId,
         subscription_id: data.subscriptionId,
         name: 'FormSwift AI',
-        description: 'Test Monthly Plan - ₹1',
+        description: `Test Subscription - ₹${amount}`,
         prefill: {
           name: 'Test User',
-          email: 'test@gmail.com',
+          email: 'test@example.com',
           contact: '9999999999',
         },
         theme: {
           color: '#8B5CF6',
         },
         handler: function (response: any) {
-          console.log('Payment Response:', response);
-          toast.success('Test Successful! Subscription ID: ' + response.razorpay_subscription_id);
+          console.log('✅ Payment Success:', response);
+          toast.success('Payment successful! Subscription ID: ' + response.razorpay_subscription_id);
         },
       };
 
@@ -105,18 +116,76 @@ export const TestRazorpaySubscription = () => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle>Test Razorpay Subscription</CardTitle>
         <CardDescription>
-          Test your Razorpay integration with ₹1 subscription
+          Test your Razorpay subscription integration
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
+        {/* Setup Instructions */}
+        <Alert>
+          <CheckCircle2 className="h-4 w-4" />
+          <AlertDescription className="space-y-2">
+            <p className="font-semibold">Setup Steps:</p>
+            <ol className="list-decimal list-inside space-y-1 text-sm">
+              <li>Create a subscription plan in your Razorpay Dashboard</li>
+              <li>Copy the Plan ID (starts with "plan_")</li>
+              <li>Paste it below and test the subscription</li>
+            </ol>
+            <Button 
+              variant="link" 
+              className="h-auto p-0" 
+              asChild
+            >
+              <a 
+                href="https://dashboard.razorpay.com/app/subscriptions/plans" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-1"
+              >
+                Open Razorpay Dashboard <ExternalLink className="h-3 w-3" />
+              </a>
+            </Button>
+          </AlertDescription>
+        </Alert>
+
+        {/* Plan ID Input */}
+        <div className="space-y-2">
+          <Label htmlFor="planId">Razorpay Plan ID *</Label>
+          <Input
+            id="planId"
+            placeholder="plan_xxxxxxxxxx"
+            value={planId}
+            onChange={(e) => setPlanId(e.target.value)}
+          />
+          <p className="text-xs text-muted-foreground">
+            Get this from Razorpay Dashboard → Subscriptions → Plans
+          </p>
+        </div>
+
+        {/* Amount Input */}
+        <div className="space-y-2">
+          <Label htmlFor="amount">Plan Amount (₹)</Label>
+          <Input
+            id="amount"
+            type="number"
+            placeholder="1"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+          <p className="text-xs text-muted-foreground">
+            For testing, use ₹1 or ₹0 amount plans
+          </p>
+        </div>
+
+        {/* Test Button */}
         <Button 
           onClick={handleTestSubscription}
-          disabled={loading}
+          disabled={loading || !planId}
           className="w-full"
+          size="lg"
         >
           {loading ? (
             <>
@@ -124,14 +193,34 @@ export const TestRazorpaySubscription = () => {
               Processing...
             </>
           ) : (
-            'Test Subscribe ₹1'
+            `Test Subscribe ₹${amount}`
           )}
         </Button>
         
-        <div className="text-sm text-muted-foreground space-y-1">
-          <p><strong>Note:</strong> This test will charge only ₹1</p>
-          <p>Use Razorpay test cards during payment</p>
-          <p className="text-xs">Test Card: 4111 1111 1111 1111, CVV: Any 3 digits, Expiry: Any future date</p>
+        {/* Testing Instructions */}
+        <div className="rounded-lg bg-muted p-4 space-y-3">
+          <h4 className="font-semibold text-sm">How to Test:</h4>
+          <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
+            <li>Make sure Test Mode is enabled in your Razorpay Dashboard</li>
+            <li>Use test payment details when the checkout opens:
+              <div className="ml-6 mt-1 space-y-1 font-mono text-xs">
+                <div>Card: 4111 1111 1111 1111</div>
+                <div>CVV: Any 3 digits (e.g., 123)</div>
+                <div>Expiry: Any future date</div>
+                <div>Name: Any name</div>
+              </div>
+            </li>
+            <li>Complete the payment to test the subscription flow</li>
+            <li>Check console logs for subscription details</li>
+          </ol>
+        </div>
+
+        {/* Additional Info */}
+        <div className="text-xs text-muted-foreground space-y-1 border-t pt-4">
+          <p><strong>Note:</strong> This is for testing only</p>
+          <p>• Test mode transactions won't charge real money</p>
+          <p>• Subscription will be visible in your Razorpay Dashboard</p>
+          <p>• Production keys should only be used for live payments</p>
         </div>
       </CardContent>
     </Card>
