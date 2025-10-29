@@ -35,3 +35,6 @@ verify_jwt = true
 
 [functions.auto-fill-form]
 verify_jwt = true
+
+[functions.intelligent-form-chat]
+verify_jwt = true
