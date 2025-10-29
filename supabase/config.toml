@@ -32,3 +32,6 @@ verify_jwt = true
 
 [functions.form-assistant]
 verify_jwt = true
+
+[functions.auto-fill-form]
+verify_jwt = true

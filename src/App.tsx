@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import AutoFillDemo from "./pages/AutoFillDemo";
 import AIAssistant from "./pages/AIAssistant";
 import Analytics from "./pages/Analytics";
 import Templates from "./pages/Templates";
@@ -72,6 +73,7 @@ const App = () => (
           <Route path="/user-experience" element={<UserExperience />} />
           <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
           <Route path="/admin/affiliates" element={<AdminAffiliates />} />
+          <Route path="/auto-fill-demo" element={<AutoFillDemo />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
