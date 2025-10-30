@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroImage1200 from "@/assets/hero-1200-compressed.webp";
-import heroImage800 from "@/assets/hero-800-compressed.webp";
-import heroImage640 from "@/assets/hero-640-compressed.webp";
+import heroImage1200 from "@/assets/hero-1200-optimized.webp";
+import heroImage800 from "@/assets/hero-800-optimized.webp";
+import heroImage640 from "@/assets/hero-640-optimized.webp";
 import heroImageFallback from "@/assets/hero-image.jpg";
 
 export const Hero = () => {
@@ -89,7 +89,7 @@ export const Hero = () => {
             <picture>
               <source 
                 srcSet={`${heroImage640} 640w, ${heroImage800} 800w, ${heroImage1200} 1200w`}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 50vw"
+                sizes="(max-width: 640px) 640px, (max-width: 1024px) 800px, 600px"
                 type="image/webp" 
               />
               <img
@@ -98,6 +98,7 @@ export const Hero = () => {
                 width="1200"
                 height="675"
                 fetchPriority="high"
+                loading="eager"
                 className="relative rounded-2xl shadow-2xl w-full h-auto"
               />
             </picture>
