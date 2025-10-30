@@ -34,14 +34,22 @@ export const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="lg" asChild className="text-base">
-                <Link to="/auth">
-                  Try 2 Forms Free <ArrowRight className="ml-2 h-5 w-5" />
+              <Button variant="hero" size="lg" asChild className="text-base group">
+                <Link to="/auto-fill-demo">
+                  <Sparkles className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
+                  Try AI Form Assistant - 10 Free Trials
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
               <Button variant="outline" size="lg" asChild className="text-base">
                 <Link to="/#pricing">View Pricing</Link>
               </Button>
+            </div>
+            
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-muted/50 rounded-lg border border-border/50">
+              <span className="text-sm text-muted-foreground">
+                🎉 10টি ফ্রি ট্রাইল • তারপর watermark সহ ডাউনলোড • Premium-এ আপগ্রেড করুন unlimited এর জন্য
+              </span>
             </div>
             
             <div className="flex items-center gap-8 pt-4">
