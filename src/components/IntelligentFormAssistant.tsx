@@ -4,9 +4,10 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Upload, Loader2, Send, Mic, Square, Image as ImageIcon, User } from "lucide-react";
+import { Upload, Loader2, Send, Mic, Square, Image as ImageIcon, User, Sparkles } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -19,7 +20,7 @@ export const IntelligentFormAssistant = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "আসসালামু আলাইকুম! আমি আপনার AI Form Assistant। আপনার ফর্ম ছবি আপলোড করুন এবং আমি আপনাকে সাহায্য করব।"
+      content: "Hello! I'm Alina, your AI Form Assistant. Upload your form image and I'll help you fill it out."
     }
   ]);
   const [input, setInput] = useState("");
@@ -44,7 +45,7 @@ export const IntelligentFormAssistant = () => {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      toast.error("দয়া করে একটি ছবি ফাইল আপলোড করুন");
+      toast.error("Please upload an image file");
       return;
     }
 
@@ -52,7 +53,7 @@ export const IntelligentFormAssistant = () => {
     reader.onloadend = async () => {
       const imageData = reader.result as string;
       setFormImage(imageData);
-      toast.success("ফর্ম ছবি আপলোড হয়েছে");
+      toast.success("Form image uploaded successfully");
       
       // Auto-send to AI for analysis
       await sendToAI("", imageData, true);
@@ -89,7 +90,7 @@ export const IntelligentFormAssistant = () => {
       }
     } catch (error: any) {
       console.error('Chat error:', error);
-      toast.error(error.message || "সংযোগে সমস্যা হয়েছে");
+      toast.error(error.message || "Connection error occurred");
     } finally {
       setIsProcessing(false);
     }
@@ -129,10 +130,10 @@ export const IntelligentFormAssistant = () => {
 
       mediaRecorder.current.start();
       setIsRecording(true);
-      toast.success("রেকর্ডিং শুরু হয়েছে");
+      toast.success("Recording started");
     } catch (error) {
       console.error('Recording error:', error);
-      toast.error("মাইক্রোফোন অ্যাক্সেস করা যায়নি");
+      toast.error("Could not access microphone");
     }
   };
 
@@ -161,12 +162,12 @@ export const IntelligentFormAssistant = () => {
 
         const voiceText = data.transcription;
         setInput(voiceText);
-        toast.success("ভয়েস টেক্সটে রূপান্তরিত হয়েছে");
+        toast.success("Voice converted to text");
       };
       reader.readAsDataURL(audioBlob);
     } catch (error) {
       console.error('Voice processing error:', error);
-      toast.error("ভয়েস প্রসেস করতে ব্যর্থ");
+      toast.error("Failed to process voice");
     } finally {
       setIsProcessing(false);
     }
@@ -176,23 +177,23 @@ export const IntelligentFormAssistant = () => {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
       {/* Left Panel - User Data */}
       <Card className="p-6 overflow-auto">
-        <h3 className="text-xl font-bold mb-4">আপনার তথ্য</h3>
+        <h3 className="text-xl font-bold mb-4">Your Information</h3>
         <p className="text-sm text-muted-foreground mb-4">
-          এই তথ্য AI ব্যবহার করে ফর্ম ফিল করবে
+          Alina will use this information to fill your forms
         </p>
         
         <div className="space-y-4">
           <div>
-            <Label htmlFor="name">নাম</Label>
+            <Label htmlFor="name">Name</Label>
             <Input
               id="name"
               value={userData.name}
               onChange={(e) => setUserData({ ...userData, name: e.target.value })}
-              placeholder="আপনার নাম"
+              placeholder="Your name"
             />
           </div>
           <div>
-            <Label htmlFor="email">ইমেইল</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
@@ -202,25 +203,25 @@ export const IntelligentFormAssistant = () => {
             />
           </div>
           <div>
-            <Label htmlFor="phone">ফোন</Label>
+            <Label htmlFor="phone">Phone</Label>
             <Input
               id="phone"
               value={userData.phone}
               onChange={(e) => setUserData({ ...userData, phone: e.target.value })}
-              placeholder="+880 1234567890"
+              placeholder="+91 1234567890"
             />
           </div>
           <div>
-            <Label htmlFor="address">ঠিকানা</Label>
+            <Label htmlFor="address">Address</Label>
             <Input
               id="address"
               value={userData.address}
               onChange={(e) => setUserData({ ...userData, address: e.target.value })}
-              placeholder="আপনার ঠিকানা"
+              placeholder="Your address"
             />
           </div>
           <div>
-            <Label htmlFor="dob">জন্ম তারিখ</Label>
+            <Label htmlFor="dob">Date of Birth</Label>
             <Input
               id="dob"
               type="date"
@@ -229,19 +230,19 @@ export const IntelligentFormAssistant = () => {
             />
           </div>
           <div>
-            <Label htmlFor="gender">লিঙ্গ</Label>
+            <Label htmlFor="gender">Gender</Label>
             <Input
               id="gender"
               value={userData.gender}
               onChange={(e) => setUserData({ ...userData, gender: e.target.value })}
-              placeholder="পুরুষ/মহিলা/অন্যান্য"
+              placeholder="Male/Female/Other"
             />
           </div>
         </div>
 
         {/* Form Upload */}
         <div className="mt-6 pt-6 border-t">
-          <Label>ফর্ম ছবি আপলোড করুন</Label>
+          <Label>Upload Form Image</Label>
           <div className="mt-2">
             <Input
               type="file"
@@ -256,7 +257,7 @@ export const IntelligentFormAssistant = () => {
             <div className="mt-4 border rounded-lg p-2">
               <div className="flex items-center gap-2 mb-2">
                 <ImageIcon className="h-4 w-4 text-green-500" />
-                <span className="text-sm text-green-600">ফর্ম আপলোড সফল</span>
+                <span className="text-sm text-green-600">Form uploaded successfully</span>
               </div>
               <img 
                 src={formImage} 
@@ -270,14 +271,24 @@ export const IntelligentFormAssistant = () => {
 
       {/* Middle Panel - Chat Interface */}
       <Card className="lg:col-span-2 flex flex-col">
-        <div className="p-4 border-b">
-          <h3 className="text-xl font-bold flex items-center gap-2">
-            <User className="h-5 w-5" />
-            AI Form Assistant চ্যাট
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            ফর্ম সম্পর্কে জিজ্ঞাসা করুন এবং সাহায্য পান
-          </p>
+        <div className="p-4 border-b bg-gradient-to-r from-primary/5 to-accent/5">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-10 w-10 border-2 border-primary/20">
+              <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alina&backgroundColor=b6e3f4" alt="Alina" />
+              <AvatarFallback className="bg-primary/10">
+                <Sparkles className="h-5 w-5 text-primary" />
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h3 className="text-xl font-bold flex items-center gap-2">
+                Alina
+                <Sparkles className="h-4 w-4 text-primary" />
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Your AI Form Assistant
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Messages Area */}
@@ -326,7 +337,7 @@ export const IntelligentFormAssistant = () => {
             </Button>
             
             <Input
-              placeholder="এখানে টাইপ করুন..."
+              placeholder="Type your message here..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -344,7 +355,7 @@ export const IntelligentFormAssistant = () => {
           </div>
           
           <p className="text-xs text-muted-foreground mt-2">
-            {isRecording ? "রেকর্ডিং চলছে... বন্ধ করতে ক্লিক করুন" : "ভয়েস বা টেক্সট দিয়ে মেসেজ পাঠান"}
+            {isRecording ? "Recording... Click to stop" : "Send message via voice or text"}
           </p>
         </div>
       </Card>

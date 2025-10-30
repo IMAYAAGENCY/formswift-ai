@@ -41,8 +41,22 @@ export const Hero = () => {
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="text-base">
-                <Link to="/#pricing">View Pricing</Link>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="text-base"
+                onClick={() => {
+                  // If already on home page, just scroll
+                  if (window.location.pathname === '/') {
+                    const pricingSection = document.getElementById('pricing');
+                    pricingSection?.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    // Navigate to home page with pricing hash
+                    window.location.href = '/#pricing';
+                  }
+                }}
+              >
+                View Pricing
               </Button>
             </div>
             
