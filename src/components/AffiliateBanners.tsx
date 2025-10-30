@@ -29,7 +29,12 @@ export function AffiliateBanners({ location = "footer", className = "" }: Affili
   const currentPage = currentLocation.pathname.split("/")[1] || "home";
 
   useEffect(() => {
-    fetchBanners();
+    // Defer non-critical affiliate banner loading to avoid blocking critical rendering path
+    const timer = setTimeout(() => {
+      fetchBanners();
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [location, currentPage]);
 
   const fetchBanners = async () => {
