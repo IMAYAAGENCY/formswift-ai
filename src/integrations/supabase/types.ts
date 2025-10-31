@@ -1702,6 +1702,27 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          created_at: string
+          endpoint: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       realtime_metrics: {
         Row: {
           form_id: string
@@ -2272,6 +2293,7 @@ export type Database = {
     }
     Functions: {
       auto_pause_low_performers: { Args: never; Returns: undefined }
+      cleanup_old_rate_limits: { Args: never; Returns: undefined }
       generate_referral_code: { Args: never; Returns: string }
       has_role: {
         Args: {
