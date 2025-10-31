@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroImageFallback from "@/assets/hero-image.jpg";
+import heroOptimized from "@/assets/hero-optimized.jpg";
+import heroTablet from "@/assets/hero-tablet.jpg";
+import heroMobile from "@/assets/hero-mobile.jpg";
 
 export const Hero = () => {
   return (
@@ -85,15 +87,18 @@ export const Hero = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-20 blur-3xl rounded-3xl" />
             <picture>
               <source 
-                srcSet="/images/hero-640.webp 640w, /images/hero-800.webp 800w, /images/hero-1200.webp 1200w"
-                sizes="(max-width: 640px) 640px, (max-width: 1024px) 800px, 600px"
-                type="image/webp" 
+                media="(max-width: 640px)"
+                srcSet={heroMobile}
+              />
+              <source 
+                media="(max-width: 1024px)"
+                srcSet={heroTablet}
               />
               <img
-                src={heroImageFallback}
-                alt="AI Form Processing"
-                width="1200"
-                height="675"
+                src={heroOptimized}
+                alt="AI Form Processing - Intelligent automation for form filling"
+                width="1920"
+                height="1080"
                 fetchPriority="high"
                 loading="eager"
                 className="relative rounded-2xl shadow-2xl w-full h-auto"

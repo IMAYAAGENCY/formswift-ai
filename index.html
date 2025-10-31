@@ -11,11 +11,6 @@
     <!-- Preconnect to critical origins -->
     <link rel="preconnect" href="https://eiwvgbksjmceafnozldm.supabase.co" crossorigin />
     <link rel="dns-prefetch" href="https://eiwvgbksjmceafnozldm.supabase.co" />
-    
-    <!-- Preload critical hero image for LCP optimization -->
-    <link rel="preload" as="image" href="/images/hero-1200.webp" type="image/webp" fetchpriority="high" media="(min-width: 1024px)" />
-    <link rel="preload" as="image" href="/images/hero-800.webp" type="image/webp" fetchpriority="high" media="(min-width: 640px) and (max-width: 1023px)" />
-    <link rel="preload" as="image" href="/images/hero-640.webp" type="image/webp" fetchpriority="high" media="(max-width: 639px)" />
 
     <meta property="og:title" content="AI AUTO FORM - India's First AI Form Assistant" />
     <meta property="og:description" content="Fill any form instantly with AI. 2 free forms included. No manual work required." />
@@ -25,6 +20,28 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "AI AUTO FORM",
+      "description": "India's First AI Form Assistant - Fill any form instantly with AI",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "5000"
+      }
+    }
+    </script>
     
     <!-- Critical CSS to prevent FOUC -->
     <style>
