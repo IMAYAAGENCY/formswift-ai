@@ -36,39 +36,43 @@ export const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            <Menu className="h-6 w-6" />
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <button
+              className="p-2 hover:bg-accent/10 rounded-lg transition-colors touch-manipulation"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 py-4 space-y-4">
+          <div className="md:hidden mt-4 py-4 space-y-3">
             <Link
               to="/#features"
-              className="block text-foreground/80 hover:text-foreground transition-colors"
+              className="block py-3 px-4 text-base text-foreground/80 hover:text-foreground hover:bg-accent/10 rounded-lg transition-colors touch-manipulation"
               onClick={() => setMobileMenuOpen(false)}
             >
               Features
             </Link>
             <Link
               to="/#pricing"
-              className="block text-foreground/80 hover:text-foreground transition-colors"
+              className="block py-3 px-4 text-base text-foreground/80 hover:text-foreground hover:bg-accent/10 rounded-lg transition-colors touch-manipulation"
               onClick={() => setMobileMenuOpen(false)}
             >
               Pricing
             </Link>
             <Link
               to="/auth"
-              className="block text-foreground/80 hover:text-foreground transition-colors"
+              className="block py-3 px-4 text-base text-foreground/80 hover:text-foreground hover:bg-accent/10 rounded-lg transition-colors touch-manipulation"
               onClick={() => setMobileMenuOpen(false)}
             >
               Login
             </Link>
-            <Button variant="hero" className="w-full" asChild>
+            <Button variant="hero" size="lg" className="w-full touch-manipulation" asChild>
               <Link to="/auth">Get Started Free</Link>
             </Button>
           </div>

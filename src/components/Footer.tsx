@@ -6,7 +6,7 @@ export const Footer = () => {
   return (
     <footer className="bg-muted/30 border-t border-border py-12 px-4">
       <div className="container mx-auto max-w-7xl">
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2">
               <div className="bg-gradient-to-r from-primary to-accent p-2 rounded-lg">

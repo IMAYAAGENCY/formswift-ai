@@ -20,7 +20,7 @@ export const Hero = () => {
               <span className="text-sm font-medium">India's First AI Form Assistant</span>
             </div>
             
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
               Fill Less.
               <br />
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
@@ -28,29 +28,28 @@ export const Hero = () => {
               </span>
             </h1>
             
-            <p className="text-xl text-muted-foreground max-w-2xl">
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl">
               Upload any form (PDF, Image, DOC). Our AI fills it instantly. Download ready-to-submit forms in seconds. No manual work required.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="lg" asChild className="text-base group">
+              <Button variant="hero" size="lg" asChild className="text-base group w-full sm:w-auto touch-manipulation">
                 <Link to="/auto-fill-demo">
                   <Sparkles className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
-                  Try AI Form Assistant - 10 Free Trials
+                  <span className="hidden sm:inline">Try AI Form Assistant - 10 Free Trials</span>
+                  <span className="sm:hidden">Try AI Form - 10 Free</span>
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="text-base"
+                className="text-base w-full sm:w-auto touch-manipulation"
                 onClick={() => {
-                  // If already on home page, just scroll
                   if (window.location.pathname === '/') {
                     const pricingSection = document.getElementById('pricing');
                     pricingSection?.scrollIntoView({ behavior: 'smooth' });
                   } else {
-                    // Navigate to home page with pricing hash
                     window.location.href = '/#pricing';
                   }
                 }}
@@ -65,20 +64,20 @@ export const Hero = () => {
               </span>
             </div>
             
-            <div className="flex items-center gap-8 pt-4">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-8 pt-4">
               <div>
-                <div className="text-3xl font-bold text-primary">10,000+</div>
-                <div className="text-sm text-muted-foreground">Forms Filled</div>
+                <div className="text-2xl sm:text-3xl font-bold text-primary">10,000+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Forms Filled</div>
               </div>
               <div className="h-12 w-px bg-border" />
               <div>
-                <div className="text-3xl font-bold text-primary">5,000+</div>
-                <div className="text-sm text-muted-foreground">Happy Users</div>
+                <div className="text-2xl sm:text-3xl font-bold text-primary">5,000+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Happy Users</div>
               </div>
               <div className="h-12 w-px bg-border" />
               <div>
-                <div className="text-3xl font-bold text-accent">2 Sec</div>
-                <div className="text-sm text-muted-foreground">Avg. Fill Time</div>
+                <div className="text-2xl sm:text-3xl font-bold text-accent">2 Sec</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Avg. Fill Time</div>
               </div>
             </div>
           </div>

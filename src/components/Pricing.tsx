@@ -104,16 +104,16 @@ export const Pricing = () => {
   return (
     <section id="pricing" className="py-20 px-4">
       <div className="container mx-auto max-w-7xl">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-bold">
+        <div className="text-center mb-12 sm:mb-16 space-y-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold px-4">
             Simple, Transparent Pricing
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             Choose the plan that fits your needs. Start with 2 free forms, no credit card required.
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {plans.map((plan, index) => (
             <Card
               key={index}
@@ -152,7 +152,8 @@ export const Pricing = () => {
                 
                 <Button
                   variant={plan.popular ? "hero" : "default"}
-                  className="w-full"
+                  size="lg"
+                  className="w-full touch-manipulation"
                   asChild
                 >
                   <Link to="/auth">Get Started</Link>
