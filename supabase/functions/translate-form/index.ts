@@ -34,8 +34,12 @@ serve(async (req) => {
         model: 'google/gemini-2.5-flash',
         messages: [
           {
+            role: 'system',
+            content: 'You are an expert translator specializing in Indian languages and regional scripts. Maintain proper grammar, cultural context, and script accuracy for all Indian languages including Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Odia, Assamese, Urdu, and others.'
+          },
+          {
             role: 'user',
-            content: `Translate the following form data to ${targetLanguage}. Keep the JSON structure intact and only translate the text values and labels. Return valid JSON only:\n\n${JSON.stringify(formData, null, 2)}`
+            content: `Translate the following form data to ${targetLanguage}. Keep the JSON structure intact and only translate the text values and labels. Preserve numbers, dates, and special characters. Use the correct native script for Indian languages. Return ONLY valid JSON without any markdown formatting:\n\n${JSON.stringify(formData, null, 2)}`
           }
         ]
       }),
@@ -44,6 +48,21 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('AI gateway error:', errorText);
+      
+      if (response.status === 429) {
+        return new Response(
+          JSON.stringify({ error: 'Rate limit exceeded. Please try again in a moment.' }),
+          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ error: 'AI credits exhausted. Please add credits to continue.' }),
+          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       throw new Error(`AI gateway error: ${response.status}`);
     }
 

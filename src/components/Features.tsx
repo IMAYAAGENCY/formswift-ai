@@ -1,11 +1,16 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Zap, Brain, Shield, TrendingUp, Clock, FileCheck } from "lucide-react";
+import { Zap, Brain, Shield, TrendingUp, Clock, FileCheck, Languages } from "lucide-react";
 
 const features = [
   {
     icon: Zap,
     title: "Lightning Fast",
     description: "Upload your form and get it filled in under 2 seconds. No waiting, no hassle.",
+  },
+  {
+    icon: Languages,
+    title: "22 Indian Languages",
+    description: "Fill forms in Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, and 16 more Indian languages with perfect native script support.",
   },
   {
     icon: Brain,
@@ -26,11 +31,6 @@ const features = [
     icon: Clock,
     title: "24/7 Availability",
     description: "Access your forms anytime, anywhere. Fill forms at midnight or during your lunch break.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Smart Memory",
-    description: "Save your details once. AI remembers and auto-fills future forms instantly.",
   },
 ];
 
