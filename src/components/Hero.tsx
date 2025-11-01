@@ -99,7 +99,6 @@ export const Hero = () => {
                 alt="AI Form Processing - Intelligent automation for form filling"
                 width="1920"
                 height="1080"
-                fetchPriority="high"
                 loading="eager"
                 className="relative rounded-2xl shadow-2xl w-full h-auto"
               />

@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { DashboardSkeleton } from "@/components/LoadingSkeleton";
 
 interface Template {
   id: string;
@@ -40,6 +41,7 @@ const Templates = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [templates, setTemplates] = useState<Template[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -59,6 +61,7 @@ const Templates = () => {
   }, []);
 
   const loadTemplates = async () => {
+    setIsLoading(true);
     const { data, error } = await supabase
       .from("form_templates")
       .select("*")
@@ -71,10 +74,12 @@ const Templates = () => {
         description: "Failed to load templates",
         variant: "destructive",
       });
+      setIsLoading(false);
       return;
     }
 
     setTemplates(data || []);
+    setIsLoading(false);
   };
 
   const handleCreateTemplate = async () => {
@@ -134,6 +139,14 @@ const Templates = () => {
       (template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         template.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+        <DashboardSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">

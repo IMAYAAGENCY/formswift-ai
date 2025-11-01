@@ -10,6 +10,8 @@ import { Plus, Trash2, GripVertical, Save, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState as useLoadingState } from "react";
+import { DashboardSkeleton } from "@/components/LoadingSkeleton";
 
 interface FormField {
   id: string;
@@ -24,8 +26,21 @@ export default function FormBuilder() {
   const [formName, setFormName] = useState("");
   const [fields, setFields] = useState<FormField[]>([]);
   const [preview, setPreview] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
+      setIsLoading(false);
+    };
+    checkAuth();
+  }, [navigate]);
 
   const addField = (type: FormField["type"]) => {
     const newField: FormField = {
@@ -82,6 +97,15 @@ export default function FormBuilder() {
       toast({ title: "Error", description: "Failed to save form", variant: "destructive" });
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <DashboardSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">

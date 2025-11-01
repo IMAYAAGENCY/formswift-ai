@@ -23,6 +23,7 @@ import { ConversionFunnel } from "@/components/analytics/ConversionFunnel";
 import { FormHeatmap } from "@/components/analytics/FormHeatmap";
 import { CustomReports } from "@/components/analytics/CustomReports";
 import { UserBehaviorAnalytics } from "@/components/analytics/UserBehaviorAnalytics";
+import { DashboardSkeleton } from "@/components/LoadingSkeleton";
 
 interface FormAnalytics {
   form_id: string;
@@ -124,6 +125,14 @@ const Analytics = () => {
       : 0;
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+        <DashboardSkeleton />
+      </div>
+    );
+  }
 
   const exportToExcel = () => {
     const headers = ["Form Name", "Views", "Submissions", "Completion Rate (%)", "Avg Time (sec)"];

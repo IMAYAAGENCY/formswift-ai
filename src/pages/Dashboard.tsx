@@ -51,6 +51,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { UpgradePlanModal } from "@/components/UpgradePlanModal";
+import { DashboardSkeleton } from "@/components/LoadingSkeleton";
 
 interface Form {
   id: string;
@@ -181,11 +182,9 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[var(--gradient-subtle)] flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading your dashboard...</p>
-        </div>
+      <div className="min-h-screen bg-[var(--gradient-subtle)]">
+        <Navbar />
+        <DashboardSkeleton />
       </div>
     );
   }
