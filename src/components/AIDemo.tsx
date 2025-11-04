@@ -59,7 +59,7 @@ export const AIDemo = () => {
             </span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            আমাদের AI এর সাথে কথা বলুন - হিন্দি, বাংলা, English বা যেকোনো ভাষায়
+            Chat with our AI in any language - Hindi, Bengali, English, or 22+ Indian languages
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export const AIDemo = () => {
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask me anything... (e.g., 'আপনি কি করতে পারেন?' or 'What can you do?')"
+                placeholder="Ask me anything in any language... (e.g., 'What can you do?' or 'How does this work?')"
                 className="flex-1 text-base"
                 onKeyPress={(e) => e.key === 'Enter' && handleDemo()}
               />
@@ -113,7 +113,7 @@ export const AIDemo = () => {
               <div className="p-6 bg-muted/30 rounded-lg border border-dashed border-primary/30">
                 <p className="text-center text-muted-foreground text-sm">
                   <Sparkles className="inline h-4 w-4 mr-2" />
-                  Try asking: "আমার form fill করতে সাহায্য করো" or "How does this work?"
+                  Try asking: "Help me fill my form" or "How does this work?" or "Explain your features"
                 </p>
               </div>
             )}
@@ -122,7 +122,7 @@ export const AIDemo = () => {
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { text: "Fill my form", emoji: "📝" },
-              { text: "আমাকে সাহায্য করো", emoji: "🤝" },
+              { text: "Help me", emoji: "🤝" },
               { text: "Explain features", emoji: "✨" }
             ].map((suggestion, idx) => (
               <Button

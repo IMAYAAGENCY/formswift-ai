@@ -9,7 +9,7 @@ const AutoFillDemo = () => {
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">AI Form Assistant</h1>
           <p className="text-xl text-muted-foreground">
-            ফর্ম আপলোড করুন, AI এর সাথে চ্যাট করুন, ভয়েস বা টেক্সট দিয়ে ফর্ম ফিল করুন
+            Upload any form, chat with AI, and fill forms using voice or text
           </p>
         </div>
         <IntelligentFormAssistant />

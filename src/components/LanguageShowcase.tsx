@@ -27,10 +27,10 @@ export const LanguageShowcase = () => {
           </div>
           
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-            भारत की हर भाषा में काम करें
+            Work in Every Language of India
           </h2>
           <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-muted-foreground">
-            Work in Every Language of India
+            22 Indian Languages • Full Native Support
           </h3>
           
           <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto px-4">

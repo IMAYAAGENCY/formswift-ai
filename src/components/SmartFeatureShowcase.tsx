@@ -22,7 +22,7 @@ export const SmartFeatureShowcase = () => {
             </span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            প্রত্যেকটি feature AI-powered এবং intelligent
+            Every feature is AI-powered and intelligent
           </p>
         </div>
 
@@ -65,7 +65,7 @@ export const SmartFeatureShowcase = () => {
               <div className="space-y-6">
                 <div className="text-center">
                   <h3 className="text-2xl font-bold mb-2">Smart Upload System</h3>
-                  <p className="text-muted-foreground">আমাদের AI যেকোনো ধরনের form পড়তে পারে</p>
+                  <p className="text-muted-foreground">Our AI can read any type of form</p>
                 </div>
                 <AnimatedUploadDemo />
                 <div className="grid sm:grid-cols-3 gap-4 mt-6">
@@ -92,14 +92,14 @@ export const SmartFeatureShowcase = () => {
                 <Brain className="h-16 w-16 mx-auto text-accent animate-pulse" />
                 <h3 className="text-2xl font-bold">AI-Powered Intelligence</h3>
                 <p className="text-muted-foreground max-w-2xl mx-auto">
-                  আমাদের AI প্রতিটি form analyze করে এবং automatically সঠিক data fill করে
+                  Our AI analyzes every form and automatically fills correct data
                 </p>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
                   {[
-                    { title: "OCR Technology", desc: "হাতের লেখা পড়তে পারে", icon: "📖" },
-                    { title: "Smart Extraction", desc: "Data automatically extract করে", icon: "🔍" },
-                    { title: "Pattern Recognition", desc: "Pattern recognize করে", icon: "🧠" },
-                    { title: "Auto Correction", desc: "Errors automatically fix করে", icon: "✅" }
+                    { title: "OCR Technology", desc: "Can read handwriting", icon: "📖" },
+                    { title: "Smart Extraction", desc: "Extracts data automatically", icon: "🔍" },
+                    { title: "Pattern Recognition", desc: "Recognizes patterns", icon: "🧠" },
+                    { title: "Auto Correction", desc: "Fixes errors automatically", icon: "✅" }
                   ].map((item, idx) => (
                     <div key={idx} className="p-4 bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg border border-primary/10">
                       <div className="text-3xl mb-2">{item.icon}</div>
@@ -117,7 +117,7 @@ export const SmartFeatureShowcase = () => {
               <div className="text-center space-y-4">
                 <Languages className="h-16 w-16 mx-auto text-primary animate-pulse" />
                 <h3 className="text-2xl font-bold">22 Indian Languages Support</h3>
-                <p className="text-muted-foreground">আপনার মাতৃভাষায় form fill করুন</p>
+                <p className="text-muted-foreground">Fill forms in your native language</p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-8">
                   {[
                     "🇮🇳 हिन्दी",
@@ -147,7 +147,7 @@ export const SmartFeatureShowcase = () => {
               <div className="text-center space-y-4">
                 <Zap className="h-16 w-16 mx-auto text-accent animate-bounce" />
                 <h3 className="text-2xl font-bold">Lightning Fast Processing</h3>
-                <p className="text-muted-foreground">2 সেকেন্ডে form fill হয়ে যাবে</p>
+                <p className="text-muted-foreground">Forms filled in just 2 seconds</p>
                 <div className="grid sm:grid-cols-3 gap-6 mt-8">
                   <div className="p-6 bg-gradient-to-br from-accent/10 to-primary/10 rounded-xl">
                     <div className="text-4xl font-bold text-accent mb-2">2 sec</div>
@@ -174,7 +174,7 @@ export const SmartFeatureShowcase = () => {
               <div className="text-center space-y-4">
                 <Shield className="h-16 w-16 mx-auto text-primary" />
                 <h3 className="text-2xl font-bold">Bank-Grade Security</h3>
-                <p className="text-muted-foreground">আপনার data 100% safe এবং encrypted</p>
+                <p className="text-muted-foreground">Your data is 100% safe and encrypted</p>
                 <div className="grid sm:grid-cols-2 gap-4 mt-8">
                   {[
                     { title: "256-bit Encryption", desc: "Military grade security", icon: "🔐" },
@@ -198,7 +198,7 @@ export const SmartFeatureShowcase = () => {
               <div className="text-center space-y-4">
                 <Sparkles className="h-16 w-16 mx-auto text-accent animate-pulse" />
                 <h3 className="text-2xl font-bold">Smart Features</h3>
-                <p className="text-muted-foreground">প্রতিটি feature intelligent এবং automated</p>
+                <p className="text-muted-foreground">Every feature is intelligent and automated</p>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
                   {[
                     { title: "Auto-Save", desc: "Automatically saves your progress", icon: "💾" },

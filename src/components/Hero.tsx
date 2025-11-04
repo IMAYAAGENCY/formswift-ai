@@ -60,7 +60,7 @@ export const Hero = () => {
             
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-muted/50 rounded-lg border border-border/50">
               <span className="text-sm text-muted-foreground">
-                🎉 10টি ফ্রি ট্রাইল • তারপর watermark সহ ডাউনলোড • Premium-এ আপগ্রেড করুন unlimited এর জন্য
+                🎉 10 Free Trials • Then download with watermark • Upgrade to Premium for unlimited access
               </span>
             </div>
             
