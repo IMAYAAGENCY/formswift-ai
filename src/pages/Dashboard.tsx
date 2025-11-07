@@ -52,6 +52,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { UpgradePlanModal } from "@/components/UpgradePlanModal";
 import { DashboardSkeleton } from "@/components/LoadingSkeleton";
+import { SubscriptionManagement } from "@/components/SubscriptionManagement";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Form {
   id: string;
@@ -603,7 +605,7 @@ const Dashboard = () => {
           <div>
             <h1 className="text-4xl font-bold mb-2">Welcome back, {userData.name}! 👋</h1>
             <p className="text-muted-foreground">
-              You have {userData.formsLimit - userData.formsUsed} free forms remaining
+              Manage your subscription and track your form usage
             </p>
           </div>
           <Button
@@ -617,116 +619,250 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card className="border-2">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Current Plan</CardTitle>
-              <Crown className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{userData.plan}</div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {userData.plan === "Free" ? "2 forms included" : "Active subscription"}
-                </p>
-                <Button 
-                  variant="hero" 
-                  size="sm" 
-                  className="mt-4 w-full"
-                  onClick={() => setShowUpgradeModal(true)}
-                >
-                  Upgrade Plan
-                </Button>
+        {/* Main Dashboard Tabs */}
+        <Tabs defaultValue="overview" className="mb-8">
+          <TabsList className="grid w-full max-w-md grid-cols-3">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="subscription">Subscription</TabsTrigger>
+            <TabsTrigger value="forms">Forms</TabsTrigger>
+          </TabsList>
+
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
+            {/* Quick Stats Grid */}
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="border-2">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Current Plan</CardTitle>
+                  <Crown className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{userData.plan}</div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {userData.plan === "Free" ? "10 forms included" : "Active subscription"}
+                  </p>
+                  <Button 
+                    variant="hero" 
+                    size="sm" 
+                    className="mt-4 w-full"
+                    onClick={() => navigate("/pricing")}
+                  >
+                    {userData.plan === "Free" ? "Upgrade Plan" : "Change Plan"}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Forms Used</CardTitle>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {userData.formsUsed} / {userData.formsLimit === 999999 ? "∞" : userData.formsLimit}
+                  </div>
+                  <Progress value={progressPercentage} className="mt-2" />
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {userData.formsLimit === 999999 
+                      ? "Unlimited forms available" 
+                      : `${userData.formsLimit - userData.formsUsed} forms remaining`}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium">Plan Status</CardTitle>
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {userData.expiryDate 
+                      ? new Date(userData.expiryDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+                      : "Active"}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {userData.plan === "Free" ? "No expiry date" : userData.expiryDate ? "Next renewal" : "Active"}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Subscription Tab */}
+          <TabsContent value="subscription" className="space-y-6">
+            <SubscriptionManagement 
+              userData={userData} 
+              userId={userId}
+              onPlanCancelled={() => fetchUserData(userId)}
+            />
+          </TabsContent>
+
+          {/* Forms Tab - Upload and manage forms */}
+          <TabsContent value="forms" className="space-y-6">
+            {/* Upload Section */}
+            <Card className="border-2 border-dashed border-primary/50 bg-card/50">
+              <CardHeader className="text-center">
+                <div className="mx-auto bg-gradient-to-r from-primary to-accent p-4 rounded-full w-fit mb-4">
+                  <Upload className="h-8 w-8 text-primary-foreground" />
+                </div>
+                <CardTitle className="text-2xl">Upload Your Form</CardTitle>
+                <CardDescription className="text-base">
+                  Drop your PDF, Image, DOC, or paste an online form link
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center">
+                <div className="w-full max-w-md space-y-4">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                    disabled={isUploading || userData.formsUsed >= userData.formsLimit}
+                    multiple
+                  />
+                  <Button 
+                    variant="hero" 
+                    size="lg" 
+                    className="w-full"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading || userData.formsUsed >= userData.formsLimit}
+                  >
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="mr-2 h-5 w-5" />
+                        Choose Files to Upload (Max 10)
+                      </>
+                    )}
+                  </Button>
+                  {isUploading && (
+                    <Progress value={uploadProgress} className="w-full" />
+                  )}
+                  <p className="text-center text-sm text-muted-foreground">
+                    Supported: PDF, JPG, PNG, DOC, DOCX (Max 20MB each, up to 10 files)
+                  </p>
+                  {userData.formsUsed >= userData.formsLimit && (
+                    <p className="text-center text-sm text-destructive font-medium">
+                      Form limit reached. Please upgrade to continue.
+                    </p>
+                  )}
+                </div>
               </CardContent>
-          </Card>
+            </Card>
 
-          <Card className="border-2">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Forms Used</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {userData.formsUsed} / {userData.formsLimit}
-              </div>
-              <Progress value={progressPercentage} className="mt-2" />
-              <p className="text-xs text-muted-foreground mt-2">
-                {userData.formsLimit - userData.formsUsed} forms remaining
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Plan Expiry</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {userData.expiryDate || "Never"}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {userData.plan === "Free" ? "Free plan doesn't expire" : "Renews automatically"}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Upload Section */}
-        <Card className="border-2 border-dashed border-primary/50 bg-card/50 mb-8">
-          <CardHeader className="text-center">
-            <div className="mx-auto bg-gradient-to-r from-primary to-accent p-4 rounded-full w-fit mb-4">
-              <Upload className="h-8 w-8 text-primary-foreground" />
-            </div>
-            <CardTitle className="text-2xl">Upload Your Form</CardTitle>
-            <CardDescription className="text-base">
-              Drop your PDF, Image, DOC, or paste an online form link
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center">
-            <div className="w-full max-w-md space-y-4">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                onChange={handleFileSelect}
-                className="hidden"
-                disabled={isUploading || userData.formsUsed >= userData.formsLimit}
-                multiple
-              />
-              <Button 
-                variant="hero" 
-                size="lg" 
-                className="w-full"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isUploading || userData.formsUsed >= userData.formsLimit}
-              >
-                {isUploading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Uploading...
-                  </>
+            {/* Recent Forms Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Recent Forms</CardTitle>
+                    <CardDescription>Your form filling history</CardDescription>
+                  </div>
+                  <TrendingUp className="h-5 w-5 text-muted-foreground" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                {forms.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No forms uploaded yet</p>
+                    <p className="text-sm mt-2">Upload your first form to get started</p>
+                  </div>
                 ) : (
-                  <>
-                    <Upload className="mr-2 h-5 w-5" />
-                    Choose Files to Upload (Max 10)
-                  </>
+                  <div className="space-y-3">
+                    {forms.map((form) => (
+                      <div 
+                        key={form.id} 
+                        className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <FileText className="h-5 w-5 text-primary flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="font-medium truncate">{form.form_name}</p>
+                              {form.ai_filled_link && (
+                                <Badge variant="secondary" className="text-xs flex-shrink-0">
+                                  <Sparkles className="h-3 w-3 mr-1" />
+                                  Processed
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(form.created_at).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                            {form.ai_filled_link && (
+                              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                {form.ai_filled_link.substring(0, 100)}...
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setSelectedFormForAssistant({id: form.id, name: form.form_name})}
+                          >
+                            <Bot className="h-4 w-4 mr-1" />
+                            Ask AI
+                          </Button>
+                          {!form.ai_filled_link && (
+                            <Button 
+                              variant="default" 
+                              size="sm"
+                              onClick={() => handleProcessForm(form.id)}
+                              disabled={processingFormId === form.id}
+                            >
+                              {processingFormId === form.id ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <>
+                                  <Sparkles className="h-4 w-4 mr-1" />
+                                  Process
+                                </>
+                              )}
+                            </Button>
+                          )}
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={async () => {
+                              const { data } = await supabase.storage
+                                .from('uploaded-forms')
+                                .createSignedUrl(form.file_link, 3600);
+                              if (data?.signedUrl) window.open(data.signedUrl, '_blank');
+                            }}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleDeleteForm(form.id, form.file_link)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
-              </Button>
-              {isUploading && (
-                <Progress value={uploadProgress} className="w-full" />
-              )}
-              <p className="text-center text-sm text-muted-foreground">
-                Supported: PDF, JPG, PNG, DOC, DOCX (Max 20MB each, up to 10 files)
-              </p>
-              {userData.formsUsed >= userData.formsLimit && (
-                <p className="text-center text-sm text-destructive font-medium">
-                  Form limit reached. Please upgrade to continue.
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
 
         {/* Demo Test Section */}
         <Card className="mb-8 border-2 border-accent/50 bg-gradient-to-br from-accent/5 to-primary/5">
