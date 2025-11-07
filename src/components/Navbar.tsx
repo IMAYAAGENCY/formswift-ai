@@ -23,7 +23,7 @@ export const Navbar = () => {
             <Link to="/#features" className="text-foreground/80 hover:text-foreground transition-colors">
               Features
             </Link>
-            <Link to="/#pricing" className="text-foreground/80 hover:text-foreground transition-colors">
+            <Link to="/pricing" className="text-foreground/80 hover:text-foreground transition-colors">
               Pricing
             </Link>
             <Link to="/auth" className="text-foreground/80 hover:text-foreground transition-colors">
@@ -59,7 +59,7 @@ export const Navbar = () => {
               Features
             </Link>
             <Link
-              to="/#pricing"
+              to="/pricing"
               className="block py-3 px-4 text-base text-foreground/80 hover:text-foreground hover:bg-accent/10 rounded-lg transition-colors touch-manipulation"
               onClick={() => setMobileMenuOpen(false)}
             >

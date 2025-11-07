@@ -33,6 +33,7 @@ import CollaborationWorkflow from "./pages/CollaborationWorkflow";
 import UserExperience from "./pages/UserExperience";
 import AdvancedAnalytics from "./pages/AdvancedAnalytics";
 import AdminAffiliates from "./pages/AdminAffiliates";
+import Pricing from "./pages/Pricing";
 import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
@@ -88,6 +89,7 @@ const App = () => (
           <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
           <Route path="/admin/affiliates" element={<AdminAffiliates />} />
           <Route path="/auto-fill-demo" element={<AutoFillDemo />} />
+          <Route path="/pricing" element={<Pricing />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
